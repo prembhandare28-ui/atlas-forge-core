@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /employees
+Disallow: /attendance
+Disallow: /documents
+Disallow: /analytics
+Disallow: /settings

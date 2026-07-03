@@ -55,6 +55,14 @@ export interface SortState {
   ascending: boolean;
 }
 
+export type EmployeeColumnKey =
+  | "employee_code"
+  | "department"
+  | "role"
+  | "manager"
+  | "status"
+  | "last_active";
+
 interface EmployeesTableProps {
   rows: EmployeeWithRelations[];
   loading: boolean;
@@ -62,6 +70,7 @@ interface EmployeesTableProps {
   onSortChange: (s: SortState) => void;
   selection: Set<string>;
   onSelectionChange: (next: Set<string>) => void;
+  hiddenColumns?: Set<EmployeeColumnKey>;
 }
 
 export function EmployeesTable({
@@ -71,7 +80,13 @@ export function EmployeesTable({
   onSortChange,
   selection,
   onSelectionChange,
+  hiddenColumns,
 }: EmployeesTableProps) {
+  const isHidden = (k: EmployeeColumnKey) => hiddenColumns?.has(k) ?? false;
+  const visibleCount =
+    3 /* checkbox + name + actions */ +
+    (["employee_code", "department", "role", "manager", "status", "last_active"] as EmployeeColumnKey[])
+      .filter((k) => !isHidden(k)).length;
   const { canManageEmployees, canDeleteEmployees } = useCan();
   const setStatus = useSetEmployeeStatus();
   const del = useDeleteEmployee();
@@ -112,25 +127,29 @@ export function EmployeesTable({
                   onCheckedChange={(v) => toggleAll(!!v)}
                 />
               </TableHead>
+              {!isHidden("employee_code") && (
               <TableHead className="w-20">
                 <SortButton active={sort.column === "employee_code"} asc={sort.ascending} onClick={() => sortBy("employee_code")}>
                   ID
                 </SortButton>
               </TableHead>
+              )}
               <TableHead>
                 <SortButton active={sort.column === "full_name"} asc={sort.ascending} onClick={() => sortBy("full_name")}>
                   Name
                 </SortButton>
               </TableHead>
-              <TableHead>Department</TableHead>
-              <TableHead>Role</TableHead>
-              <TableHead>Manager</TableHead>
-              <TableHead>Status</TableHead>
+              {!isHidden("department") && <TableHead>Department</TableHead>}
+              {!isHidden("role") && <TableHead>Role</TableHead>}
+              {!isHidden("manager") && <TableHead>Manager</TableHead>}
+              {!isHidden("status") && <TableHead>Status</TableHead>}
+              {!isHidden("last_active") && (
               <TableHead>
                 <SortButton active={sort.column === "last_active_at"} asc={sort.ascending} onClick={() => sortBy("last_active_at")}>
                   Last active
                 </SortButton>
               </TableHead>
+              )}
               <TableHead className="w-12" />
             </TableRow>
           </TableHeader>
@@ -138,14 +157,14 @@ export function EmployeesTable({
             {loading && rows.length === 0 ? (
               Array.from({ length: 6 }).map((_, i) => (
                 <TableRow key={`s-${i}`}>
-                  <TableCell colSpan={9}>
+                  <TableCell colSpan={visibleCount}>
                     <Skeleton className="h-8 w-full" />
                   </TableCell>
                 </TableRow>
               ))
             ) : rows.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={9} className="py-16 text-center text-sm text-muted-foreground">
+                <TableCell colSpan={visibleCount} className="py-16 text-center text-sm text-muted-foreground">
                   No employees match your filters.
                 </TableCell>
               </TableRow>
@@ -165,9 +184,10 @@ export function EmployeesTable({
                         onCheckedChange={() => toggleOne(r.id)}
                       />
                     </TableCell>
+                    {!isHidden("employee_code") && (
                     <TableCell className="font-mono text-xs text-muted-foreground">
                       {r.employee_code}
-                    </TableCell>
+                    </TableCell>)}
                     <TableCell>
                       <Link
                         to="/employees/$employeeId"
@@ -181,15 +201,20 @@ export function EmployeesTable({
                         </div>
                       </Link>
                     </TableCell>
-                    <TableCell className="text-sm">{r.department?.name ?? "—"}</TableCell>
-                    <TableCell className="text-sm">{r.role_title ?? "—"}</TableCell>
+                    {!isHidden("department") && (
+                    <TableCell className="text-sm">{r.department?.name ?? "—"}</TableCell>)}
+                    {!isHidden("role") && (
+                    <TableCell className="text-sm">{r.role_title ?? "—"}</TableCell>)}
+                    {!isHidden("manager") && (
                     <TableCell className="text-sm">
                       {r.manager ? r.manager.full_name : "—"}
-                    </TableCell>
-                    <TableCell><StatusBadge status={r.status} /></TableCell>
+                    </TableCell>)}
+                    {!isHidden("status") && (
+                    <TableCell><StatusBadge status={r.status} /></TableCell>)}
+                    {!isHidden("last_active") && (
                     <TableCell className="text-xs text-muted-foreground">
                       {formatRelative(r.last_active_at ?? r.updated_at)}
-                    </TableCell>
+                    </TableCell>)}
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>

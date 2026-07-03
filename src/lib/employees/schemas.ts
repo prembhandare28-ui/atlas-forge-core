@@ -28,7 +28,7 @@ export const employeeStep2Schema = z.object({
 export const employeeStep3Schema = z.object({
   responsibilities: z.string().trim().max(2000).optional().or(z.literal("")),
   bio: z.string().trim().max(2000).optional().or(z.literal("")),
-  skills: z.array(z.string().trim().min(1).max(40)).max(30).default([]),
+  skills: z.array(z.string().trim().min(1).max(40)).max(30),
   kpis: z
     .array(
       z.object({
@@ -36,8 +36,7 @@ export const employeeStep3Schema = z.object({
         target: z.string().trim().max(80).optional().or(z.literal("")),
       }),
     )
-    .max(10)
-    .default([]),
+    .max(10),
 });
 
 export const employeeFormSchema = employeeStep1Schema

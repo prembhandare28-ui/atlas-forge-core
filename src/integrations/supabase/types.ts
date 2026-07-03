@@ -44,6 +44,140 @@ export type Database = {
         }
         Relationships: []
       }
+      departments: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          parent_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          parent_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          parent_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "departments_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      employees: {
+        Row: {
+          archived_at: string | null
+          avatar_url: string | null
+          bio: string | null
+          created_at: string
+          created_by: string | null
+          department_id: string | null
+          email: string
+          employee_code: string
+          employment_type: Database["public"]["Enums"]["employment_type"]
+          full_name: string
+          id: string
+          kind: Database["public"]["Enums"]["employee_kind"]
+          kpis: Json
+          last_active_at: string | null
+          location: string | null
+          manager_id: string | null
+          metadata: Json
+          phone: string | null
+          responsibilities: string | null
+          role_title: string | null
+          skills: string[]
+          status: Database["public"]["Enums"]["employee_status"]
+          timezone: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          archived_at?: string | null
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          created_by?: string | null
+          department_id?: string | null
+          email: string
+          employee_code: string
+          employment_type?: Database["public"]["Enums"]["employment_type"]
+          full_name: string
+          id?: string
+          kind?: Database["public"]["Enums"]["employee_kind"]
+          kpis?: Json
+          last_active_at?: string | null
+          location?: string | null
+          manager_id?: string | null
+          metadata?: Json
+          phone?: string | null
+          responsibilities?: string | null
+          role_title?: string | null
+          skills?: string[]
+          status?: Database["public"]["Enums"]["employee_status"]
+          timezone?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          archived_at?: string | null
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          created_by?: string | null
+          department_id?: string | null
+          email?: string
+          employee_code?: string
+          employment_type?: Database["public"]["Enums"]["employment_type"]
+          full_name?: string
+          id?: string
+          kind?: Database["public"]["Enums"]["employee_kind"]
+          kpis?: Json
+          last_active_at?: string | null
+          location?: string | null
+          manager_id?: string | null
+          metadata?: Json
+          phone?: string | null
+          responsibilities?: string | null
+          role_title?: string | null
+          skills?: string[]
+          status?: Database["public"]["Enums"]["employee_status"]
+          timezone?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "employees_department_id_fkey"
+            columns: ["department_id"]
+            isOneToOne: false
+            referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "employees_manager_id_fkey"
+            columns: ["manager_id"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -113,6 +247,14 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "manager" | "employee"
+      employee_kind: "human" | "ai"
+      employee_status: "active" | "inactive" | "on_leave" | "archived"
+      employment_type:
+        | "full_time"
+        | "part_time"
+        | "contract"
+        | "intern"
+        | "consultant"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -241,6 +383,15 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "manager", "employee"],
+      employee_kind: ["human", "ai"],
+      employee_status: ["active", "inactive", "on_leave", "archived"],
+      employment_type: [
+        "full_time",
+        "part_time",
+        "contract",
+        "intern",
+        "consultant",
+      ],
     },
   },
 } as const

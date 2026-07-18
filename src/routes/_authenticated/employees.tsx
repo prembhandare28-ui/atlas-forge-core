@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   Archive,
@@ -47,6 +47,18 @@ import {
 import { useCan } from "@/lib/rbac";
 
 export const Route = createFileRoute("/_authenticated/employees")({
+  validateSearch: (search: Record<string, unknown>) => {
+    const asArray = (v: unknown): string[] => {
+      if (Array.isArray(v)) return v.map(String);
+      if (typeof v === "string" && v.length) return v.split(",");
+      return [];
+    };
+    return {
+      status: asArray(search.status),
+      kind: asArray(search.kind),
+      department: asArray(search.department),
+    };
+  },
   component: EmployeesPage,
 });
 
@@ -69,13 +81,15 @@ const COLUMN_OPTIONS: { key: ColumnKey; label: string }[] = [
 
 function EmployeesPage() {
   const { canManageEmployees } = useCan();
+  const initial = Route.useSearch();
   const [wizardOpen, setWizardOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [deptFilter, setDeptFilter] = useState<string[]>([]);
+  const [deptFilter, setDeptFilter] = useState<string[]>(initial.department ?? []);
   const [roleFilter, setRoleFilter] = useState<string[]>([]);
   const [managerFilter, setManagerFilter] = useState<string[]>([]);
-  const [statusFilter, setStatusFilter] = useState<string[]>([]);
+  const [statusFilter, setStatusFilter] = useState<string[]>(initial.status ?? []);
   const [employmentFilter, setEmploymentFilter] = useState<string[]>([]);
+  const [kindFilter, setKindFilter] = useState<string[]>(initial.kind ?? []);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(25);
   const [sort, setSort] = useState<SortState>({ column: "created_at", ascending: false });
@@ -85,12 +99,22 @@ function EmployeesPage() {
   const { data: departments = [] } = useDepartmentsQuery();
   const { data: managers = [] } = useManagerOptionsQuery();
 
+  // Sync when navigating between dashboard cards while the page is mounted.
+  useEffect(() => {
+    setStatusFilter(initial.status ?? []);
+    setKindFilter(initial.kind ?? []);
+    setDeptFilter(initial.department ?? []);
+    setPage(1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initial.status?.join(","), initial.kind?.join(","), initial.department?.join(",")]);
+
   const query = useEmployeesQuery({
     search: search || undefined,
     departmentIds: deptFilter.length ? deptFilter : undefined,
     managerIds: managerFilter.length ? managerFilter : undefined,
     statuses: statusFilter.length ? (statusFilter as never) : undefined,
     employmentTypes: employmentFilter.length ? (employmentFilter as never) : undefined,
+    kinds: kindFilter.length ? (kindFilter as never) : undefined,
     page,
     pageSize,
     sort,

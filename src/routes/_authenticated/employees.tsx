@@ -36,7 +36,9 @@ import {
 import { MultiFilter } from "@/components/employees/employees-filters";
 import {
   EMPLOYEE_STATUSES,
+  EMPLOYEE_KINDS,
   EMPLOYMENT_TYPES,
+  REVENUE_CATEGORIES,
 } from "@/lib/employees/constants";
 import {
   useDepartmentsQuery,
@@ -90,6 +92,7 @@ function EmployeesPage() {
   const [statusFilter, setStatusFilter] = useState<string[]>(initial.status ?? []);
   const [employmentFilter, setEmploymentFilter] = useState<string[]>([]);
   const [kindFilter, setKindFilter] = useState<string[]>(initial.kind ?? []);
+  const [revenueCategoryFilter, setRevenueCategoryFilter] = useState<string[]>([]);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(25);
   const [sort, setSort] = useState<SortState>({ column: "created_at", ascending: false });
@@ -115,6 +118,7 @@ function EmployeesPage() {
     statuses: statusFilter.length ? (statusFilter as never) : undefined,
     employmentTypes: employmentFilter.length ? (employmentFilter as never) : undefined,
     kinds: kindFilter.length ? (kindFilter as never) : undefined,
+    revenueCategories: revenueCategoryFilter.length ? (revenueCategoryFilter as never) : undefined,
     page,
     pageSize,
     sort,
@@ -143,6 +147,8 @@ function EmployeesPage() {
     managerFilter.length +
     statusFilter.length +
     employmentFilter.length +
+    kindFilter.length +
+    revenueCategoryFilter.length +
     (search ? 1 : 0);
 
   const clearFilters = () => {
@@ -152,6 +158,8 @@ function EmployeesPage() {
     setManagerFilter([]);
     setStatusFilter([]);
     setEmploymentFilter([]);
+    setKindFilter([]);
+    setRevenueCategoryFilter([]);
     setPage(1);
   };
 
@@ -229,6 +237,24 @@ function EmployeesPage() {
             value={employmentFilter}
             onChange={(v) => {
               setEmploymentFilter(v);
+              setPage(1);
+            }}
+          />
+          <MultiFilter
+            label="Type"
+            options={EMPLOYEE_KINDS.map((k) => ({ value: k.value, label: k.label }))}
+            value={kindFilter}
+            onChange={(v) => {
+              setKindFilter(v);
+              setPage(1);
+            }}
+          />
+          <MultiFilter
+            label="Revenue"
+            options={REVENUE_CATEGORIES.map((c) => ({ value: c.value, label: c.label }))}
+            value={revenueCategoryFilter}
+            onChange={(v) => {
+              setRevenueCategoryFilter(v);
               setPage(1);
             }}
           />

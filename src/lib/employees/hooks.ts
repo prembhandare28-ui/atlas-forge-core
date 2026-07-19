@@ -3,6 +3,7 @@ import { toast } from "sonner";
 
 import {
   createEmployee,
+  cloneEmployee,
   deleteEmployee,
   getEmployee,
   listDepartments,
@@ -107,5 +108,17 @@ export function useDeleteEmployee() {
       invalidateEmployees(qc);
     },
     onError: (err: Error) => toast.error(err.message || "Could not delete employee"),
+  });
+}
+
+export function useCloneEmployee() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => cloneEmployee(id),
+    onSuccess: (row) => {
+      toast.success(`${row.full_name} cloned`);
+      invalidateEmployees(qc);
+    },
+    onError: (err: Error) => toast.error(err.message || "Could not clone employee"),
   });
 }

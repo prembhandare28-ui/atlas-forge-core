@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, Mail, MapPin, Phone, Clock, Building2 } from "lucide-react";
+import { ArrowLeft, Mail, MapPin, Phone, Clock, Building2, DollarSign, Target, Gauge, Bot } from "lucide-react";
 
 import { PageHeader } from "@/components/shared/page-header";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,16 @@ import {
   useEmployeeAuditQuery,
   useEmployeeQuery,
 } from "@/lib/employees/hooks";
-import { EMPLOYMENT_TYPES, formatRelative, labelFor } from "@/lib/employees/constants";
+import {
+  EMPLOYMENT_TYPES,
+  EMPLOYEE_KINDS,
+  EMPLOYEE_PRIORITIES,
+  REVENUE_CATEGORIES,
+  EXPERIENCE_LEVELS,
+  DEPLOYMENT_STATUSES,
+  formatRelative,
+  labelFor,
+} from "@/lib/employees/constants";
 
 export const Route = createFileRoute("/_authenticated/employees/$employeeId")({
   component: EmployeeProfilePage,
@@ -74,13 +83,11 @@ function EmployeeProfilePage() {
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="organization">Organization</TabsTrigger>
           <TabsTrigger value="skills">Skills</TabsTrigger>
-          <TabsTrigger value="kpis">KPIs</TabsTrigger>
+          <TabsTrigger value="revenue">Revenue</TabsTrigger>
           <TabsTrigger value="activity">Activity</TabsTrigger>
           <TabsTrigger value="documents">Documents</TabsTrigger>
           <TabsTrigger value="audit">Audit log</TabsTrigger>
-          <TabsTrigger value="ai" disabled>
-            AI profile
-          </TabsTrigger>
+          <TabsTrigger value="ai">AI configuration</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="mt-4 space-y-4">
@@ -127,7 +134,101 @@ function EmployeeProfilePage() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="kpis" className="mt-4">
+        <TabsContent value="revenue" className="mt-4 space-y-4">
+          <div className="grid gap-3 sm:grid-cols-3">
+            <MetricTile
+              icon={DollarSign}
+              label="Revenue goal"
+              value={
+                employee.revenue_goal !== null
+                  ? `$${Number(employee.revenue_goal).toLocaleString()}`
+                  : "—"
+              }
+            />
+            <MetricTile
+              icon={Target}
+              label="Expected ROI"
+              value={employee.expected_roi !== null ? `${employee.expected_roi}%` : "—"}
+            />
+            <MetricTile
+              icon={Gauge}
+              label="Priority"
+              value={labelFor(EMPLOYEE_PRIORITIES, employee.priority)}
+            />
+          </div>
+          <Card>
+            <CardContent className="grid grid-cols-1 gap-4 pt-6 sm:grid-cols-2">
+              <Field
+                label="Revenue category"
+                value={
+                  employee.revenue_category === "custom"
+                    ? employee.revenue_category_custom ?? "Custom"
+                    : labelFor(REVENUE_CATEGORIES, employee.revenue_category)
+                }
+              />
+              <Field label="Cost center" value={employee.cost_center ?? "—"} />
+              <Field
+                label="Experience level"
+                value={labelFor(EXPERIENCE_LEVELS, employee.experience_level)}
+              />
+              <Field
+                label="Notes"
+                value={employee.notes ?? "—"}
+              />
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader><CardTitle className="text-base">KPIs</CardTitle></CardHeader>
+            <CardContent className="space-y-3">
+              {kpis.length === 0 ? (
+                <p className="text-sm text-muted-foreground">No KPIs configured.</p>
+              ) : (
+                kpis.map((k, i) => (
+                  <div
+                    key={`${k.label}-${i}`}
+                    className="flex items-center justify-between rounded-lg border p-3"
+                  >
+                    <span className="text-sm font-medium">{k.label}</span>
+                    {k.target ? (
+                      <span className="text-xs text-muted-foreground">{k.target}</span>
+                    ) : null}
+                  </div>
+                ))
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="ai" className="mt-4 space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-base">
+                <Bot className="h-4 w-4 text-primary" /> AI runtime
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="rounded-lg border border-dashed bg-muted/30 p-4 text-sm text-muted-foreground">
+                Runtime is prepared but not deployed. Brain, knowledge and workflow engines
+                arrive in Sprint #005 — these fields store the intent today.
+              </div>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <Field
+                  label="Deployment status"
+                  value={labelFor(DEPLOYMENT_STATUSES, employee.deployment_status)}
+                />
+                <Field
+                  label="Kind"
+                  value={labelFor(EMPLOYEE_KINDS, employee.kind)}
+                />
+                <Field label="Brain version" value={employee.brain_version ?? "—"} mono />
+                <Field label="Knowledge version" value={employee.knowledge_version ?? "—"} mono />
+                <Field label="Workflow version" value={employee.workflow_version ?? "—"} mono />
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="_kpis_removed" className="mt-4">
           <Card>
             <CardContent className="space-y-3 pt-6">
               {kpis.length === 0 ? (
@@ -218,6 +319,25 @@ function Field({ label, value, mono }: { label: string; value: string; mono?: bo
     <div>
       <p className="text-xs uppercase tracking-wide text-muted-foreground">{label}</p>
       <p className={mono ? "mt-1 font-mono text-sm" : "mt-1 text-sm"}>{value}</p>
+    </div>
+  );
+}
+
+function MetricTile({
+  icon: Icon,
+  label,
+  value,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="rounded-xl border bg-card/40 p-4">
+      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+        <Icon className="h-3.5 w-3.5" /> {label}
+      </div>
+      <div className="mt-2 text-xl font-semibold tracking-tight">{value}</div>
     </div>
   );
 }

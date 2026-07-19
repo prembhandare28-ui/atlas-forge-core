@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import {
   ArrowUpDown,
   Archive,
+  Copy,
   MoreHorizontal,
   Trash2,
   Undo2,
@@ -45,6 +46,7 @@ import { formatRelative } from "@/lib/employees/constants";
 import type { EmployeeWithRelations } from "@/lib/employees/service";
 import {
   useDeleteEmployee,
+  useCloneEmployee,
   useSetEmployeeStatus,
 } from "@/lib/employees/hooks";
 import { useCan } from "@/lib/rbac";
@@ -90,6 +92,7 @@ export function EmployeesTable({
   const { canManageEmployees, canDeleteEmployees } = useCan();
   const setStatus = useSetEmployeeStatus();
   const del = useDeleteEmployee();
+  const clone = useCloneEmployee();
   const [confirmDelete, setConfirmDelete] = useState<EmployeeWithRelations | null>(null);
 
   const allSelected = rows.length > 0 && rows.every((r) => selection.has(r.id));
@@ -237,6 +240,9 @@ export function EmployeesTable({
                           {canManageEmployees && (
                             <>
                               <DropdownMenuSeparator />
+                              <DropdownMenuItem onClick={() => clone.mutate(r.id)}>
+                                <Copy className="mr-2 h-4 w-4" /> Clone
+                              </DropdownMenuItem>
                               {r.status !== "archived" ? (
                                 <DropdownMenuItem
                                   onClick={() =>

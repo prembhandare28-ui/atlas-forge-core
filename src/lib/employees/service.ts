@@ -1,7 +1,12 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
 import type { EmployeeFormValues } from "./schemas";
-import type { EmployeeKind, EmployeeStatus, EmploymentType } from "./constants";
+import type {
+  EmployeeKind,
+  EmployeeStatus,
+  EmploymentType,
+  RevenueCategory,
+} from "./constants";
 
 export type EmployeeRow = Database["public"]["Tables"]["employees"]["Row"];
 export type DepartmentRow = Database["public"]["Tables"]["departments"]["Row"];
@@ -19,6 +24,7 @@ export interface ListEmployeesParams {
   statuses?: EmployeeStatus[];
   employmentTypes?: EmploymentType[];
   kinds?: EmployeeKind[];
+  revenueCategories?: RevenueCategory[];
   page?: number;
   pageSize?: number;
   sort?: { column: "full_name" | "created_at" | "last_active_at" | "employee_code"; ascending: boolean };
@@ -50,6 +56,7 @@ export async function listEmployees(
     statuses,
     employmentTypes,
     kinds,
+    revenueCategories,
     page = 1,
     pageSize = 25,
     sort = { column: "created_at", ascending: false },
@@ -76,6 +83,7 @@ export async function listEmployees(
   if (statuses?.length) q = q.in("status", statuses);
   if (employmentTypes?.length) q = q.in("employment_type", employmentTypes);
   if (kinds?.length) q = q.in("kind", kinds);
+  if (revenueCategories?.length) q = q.in("revenue_category", revenueCategories);
 
   const { data, error, count } = await q;
   if (error) throw error;
@@ -132,6 +140,8 @@ function toInsert(values: EmployeeFormValues) {
     email: values.email.trim().toLowerCase(),
     phone: emptyToNull(values.phone ?? null),
     avatar_url: values.avatar_url ?? null,
+    kind: values.kind,
+    status: values.status,
     department_id: values.department_id ?? null,
     role_title: emptyToNull(values.role_title ?? null),
     manager_id: values.manager_id ?? null,
@@ -142,6 +152,14 @@ function toInsert(values: EmployeeFormValues) {
     responsibilities: emptyToNull(values.responsibilities ?? null),
     skills: values.skills ?? [],
     kpis: (values.kpis ?? []) as unknown as Database["public"]["Tables"]["employees"]["Insert"]["kpis"],
+    experience_level: values.experience_level ?? null,
+    notes: emptyToNull(values.notes ?? null),
+    revenue_goal: values.revenue_goal ?? null,
+    expected_roi: values.expected_roi ?? null,
+    cost_center: emptyToNull(values.cost_center ?? null),
+    priority: values.priority,
+    revenue_category: values.revenue_category ?? null,
+    revenue_category_custom: emptyToNull(values.revenue_category_custom ?? null),
   } satisfies Database["public"]["Tables"]["employees"]["Insert"];
 }
 
@@ -176,6 +194,17 @@ export async function updateEmployee(
   if (patch.skills !== undefined) payload.skills = patch.skills;
   if (patch.kpis !== undefined)
     payload.kpis = patch.kpis as unknown as Database["public"]["Tables"]["employees"]["Update"]["kpis"];
+  if (patch.kind !== undefined) payload.kind = patch.kind;
+  if (patch.status !== undefined) payload.status = patch.status;
+  if (patch.experience_level !== undefined) payload.experience_level = patch.experience_level ?? null;
+  if (patch.notes !== undefined) payload.notes = emptyToNull(patch.notes);
+  if (patch.revenue_goal !== undefined) payload.revenue_goal = patch.revenue_goal ?? null;
+  if (patch.expected_roi !== undefined) payload.expected_roi = patch.expected_roi ?? null;
+  if (patch.cost_center !== undefined) payload.cost_center = emptyToNull(patch.cost_center);
+  if (patch.priority !== undefined) payload.priority = patch.priority;
+  if (patch.revenue_category !== undefined) payload.revenue_category = patch.revenue_category ?? null;
+  if (patch.revenue_category_custom !== undefined)
+    payload.revenue_category_custom = emptyToNull(patch.revenue_category_custom);
 
   const { data, error } = await supabase
     .from("employees")
@@ -185,6 +214,37 @@ export async function updateEmployee(
     .single();
   if (error) throw error;
   return data;
+}
+
+export async function cloneEmployee(id: string): Promise<EmployeeRow> {
+  const src = await getEmployee(id);
+  const values: EmployeeFormValues = {
+    full_name: `${src.full_name} (Copy)`,
+    email: `copy+${Date.now()}@${(src.email.split("@")[1] ?? "example.com")}`,
+    phone: src.phone ?? "",
+    avatar_url: null,
+    kind: src.kind,
+    status: "inactive",
+    department_id: src.department_id,
+    role_title: src.role_title ?? "",
+    manager_id: src.manager_id,
+    employment_type: src.employment_type,
+    location: src.location ?? "",
+    timezone: src.timezone ?? "",
+    responsibilities: src.responsibilities ?? "",
+    bio: src.bio ?? "",
+    skills: src.skills ?? [],
+    kpis: (src.kpis as EmployeeFormValues["kpis"]) ?? [],
+    experience_level: src.experience_level,
+    notes: src.notes ?? "",
+    revenue_goal: src.revenue_goal !== null ? Number(src.revenue_goal) : null,
+    expected_roi: src.expected_roi !== null ? Number(src.expected_roi) : null,
+    cost_center: src.cost_center ?? "",
+    priority: src.priority,
+    revenue_category: src.revenue_category,
+    revenue_category_custom: src.revenue_category_custom ?? "",
+  };
+  return createEmployee(values);
 }
 
 export async function setEmployeeStatus(

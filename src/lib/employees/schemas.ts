@@ -14,6 +14,8 @@ export const employeeStep1Schema = z.object({
     .optional()
     .or(z.literal("")),
   avatar_url: z.string().url().nullable().optional(),
+  kind: z.enum(["human", "ai", "hybrid"]),
+  status: z.enum(["active", "on_leave", "inactive", "archived"]),
 });
 
 export const employeeStep2Schema = z.object({
@@ -37,11 +39,29 @@ export const employeeStep3Schema = z.object({
       }),
     )
     .max(10),
+  experience_level: z
+    .enum(["junior", "mid", "senior", "lead", "principal"])
+    .nullable()
+    .optional(),
+  notes: z.string().trim().max(2000).optional().or(z.literal("")),
+});
+
+export const employeeStep4Schema = z.object({
+  revenue_goal: z.number().nonnegative().max(1_000_000_000).nullable().optional(),
+  expected_roi: z.number().min(-100).max(100_000).nullable().optional(),
+  cost_center: z.string().trim().max(80).optional().or(z.literal("")),
+  priority: z.enum(["low", "medium", "high", "critical"]),
+  revenue_category: z
+    .enum(["sales", "marketing", "support", "operations", "research", "custom"])
+    .nullable()
+    .optional(),
+  revenue_category_custom: z.string().trim().max(80).optional().or(z.literal("")),
 });
 
 export const employeeFormSchema = employeeStep1Schema
   .merge(employeeStep2Schema)
-  .merge(employeeStep3Schema);
+  .merge(employeeStep3Schema)
+  .merge(employeeStep4Schema);
 
 export type EmployeeFormValues = z.infer<typeof employeeFormSchema>;
 

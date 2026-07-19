@@ -84,82 +84,130 @@ export type Database = {
           archived_at: string | null
           avatar_url: string | null
           bio: string | null
+          brain_version: string | null
+          cost_center: string | null
           created_at: string
           created_by: string | null
           department_id: string | null
+          deployment_status: Database["public"]["Enums"]["deployment_status"]
           email: string
           employee_code: string
           employment_type: Database["public"]["Enums"]["employment_type"]
+          expected_roi: number | null
+          experience_level:
+            | Database["public"]["Enums"]["experience_level"]
+            | null
           full_name: string
           id: string
           kind: Database["public"]["Enums"]["employee_kind"]
+          knowledge_version: string | null
           kpis: Json
           last_active_at: string | null
           location: string | null
           manager_id: string | null
           metadata: Json
+          notes: string | null
           phone: string | null
+          priority: Database["public"]["Enums"]["employee_priority"]
           responsibilities: string | null
+          revenue_category:
+            | Database["public"]["Enums"]["revenue_category"]
+            | null
+          revenue_category_custom: string | null
+          revenue_goal: number | null
           role_title: string | null
           skills: string[]
           status: Database["public"]["Enums"]["employee_status"]
           timezone: string | null
           updated_at: string
           user_id: string | null
+          workflow_version: string | null
         }
         Insert: {
           archived_at?: string | null
           avatar_url?: string | null
           bio?: string | null
+          brain_version?: string | null
+          cost_center?: string | null
           created_at?: string
           created_by?: string | null
           department_id?: string | null
+          deployment_status?: Database["public"]["Enums"]["deployment_status"]
           email: string
           employee_code: string
           employment_type?: Database["public"]["Enums"]["employment_type"]
+          expected_roi?: number | null
+          experience_level?:
+            | Database["public"]["Enums"]["experience_level"]
+            | null
           full_name: string
           id?: string
           kind?: Database["public"]["Enums"]["employee_kind"]
+          knowledge_version?: string | null
           kpis?: Json
           last_active_at?: string | null
           location?: string | null
           manager_id?: string | null
           metadata?: Json
+          notes?: string | null
           phone?: string | null
+          priority?: Database["public"]["Enums"]["employee_priority"]
           responsibilities?: string | null
+          revenue_category?:
+            | Database["public"]["Enums"]["revenue_category"]
+            | null
+          revenue_category_custom?: string | null
+          revenue_goal?: number | null
           role_title?: string | null
           skills?: string[]
           status?: Database["public"]["Enums"]["employee_status"]
           timezone?: string | null
           updated_at?: string
           user_id?: string | null
+          workflow_version?: string | null
         }
         Update: {
           archived_at?: string | null
           avatar_url?: string | null
           bio?: string | null
+          brain_version?: string | null
+          cost_center?: string | null
           created_at?: string
           created_by?: string | null
           department_id?: string | null
+          deployment_status?: Database["public"]["Enums"]["deployment_status"]
           email?: string
           employee_code?: string
           employment_type?: Database["public"]["Enums"]["employment_type"]
+          expected_roi?: number | null
+          experience_level?:
+            | Database["public"]["Enums"]["experience_level"]
+            | null
           full_name?: string
           id?: string
           kind?: Database["public"]["Enums"]["employee_kind"]
+          knowledge_version?: string | null
           kpis?: Json
           last_active_at?: string | null
           location?: string | null
           manager_id?: string | null
           metadata?: Json
+          notes?: string | null
           phone?: string | null
+          priority?: Database["public"]["Enums"]["employee_priority"]
           responsibilities?: string | null
+          revenue_category?:
+            | Database["public"]["Enums"]["revenue_category"]
+            | null
+          revenue_category_custom?: string | null
+          revenue_goal?: number | null
           role_title?: string | null
           skills?: string[]
           status?: Database["public"]["Enums"]["employee_status"]
           timezone?: string | null
           updated_at?: string
           user_id?: string | null
+          workflow_version?: string | null
         }
         Relationships: [
           {
@@ -247,7 +295,9 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "manager" | "employee"
-      employee_kind: "human" | "ai"
+      deployment_status: "draft" | "ready" | "deployed" | "paused" | "error"
+      employee_kind: "human" | "ai" | "hybrid"
+      employee_priority: "low" | "medium" | "high" | "critical"
       employee_status: "active" | "inactive" | "on_leave" | "archived"
       employment_type:
         | "full_time"
@@ -255,6 +305,14 @@ export type Database = {
         | "contract"
         | "intern"
         | "consultant"
+      experience_level: "junior" | "mid" | "senior" | "lead" | "principal"
+      revenue_category:
+        | "sales"
+        | "marketing"
+        | "support"
+        | "operations"
+        | "research"
+        | "custom"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -383,7 +441,9 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "manager", "employee"],
-      employee_kind: ["human", "ai"],
+      deployment_status: ["draft", "ready", "deployed", "paused", "error"],
+      employee_kind: ["human", "ai", "hybrid"],
+      employee_priority: ["low", "medium", "high", "critical"],
       employee_status: ["active", "inactive", "on_leave", "archived"],
       employment_type: [
         "full_time",
@@ -391,6 +451,15 @@ export const Constants = {
         "contract",
         "intern",
         "consultant",
+      ],
+      experience_level: ["junior", "mid", "senior", "lead", "principal"],
+      revenue_category: [
+        "sales",
+        "marketing",
+        "support",
+        "operations",
+        "research",
+        "custom",
       ],
     },
   },

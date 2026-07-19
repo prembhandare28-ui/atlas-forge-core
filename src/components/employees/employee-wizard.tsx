@@ -1,7 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, Plus, X, Check, Building2, User2, Sparkles, ClipboardCheck } from "lucide-react";
+import {
+  Loader2, Plus, X, Check,
+  Building2, User2, Sparkles, ClipboardCheck,
+  DollarSign, Bot, Users2, Zap,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -26,13 +30,18 @@ import {
 import { cn } from "@/lib/utils";
 
 import {
-  employeeStep1Schema,
-  employeeStep2Schema,
-  employeeStep3Schema,
   employeeFormSchema,
   type EmployeeFormValues,
 } from "@/lib/employees/schemas";
-import { EMPLOYMENT_TYPES, labelFor } from "@/lib/employees/constants";
+import {
+  EMPLOYMENT_TYPES,
+  EMPLOYEE_KINDS,
+  EMPLOYEE_STATUSES,
+  EMPLOYEE_PRIORITIES,
+  EXPERIENCE_LEVELS,
+  REVENUE_CATEGORIES,
+  labelFor,
+} from "@/lib/employees/constants";
 import {
   useCreateEmployee,
   useDepartmentsQuery,
@@ -42,10 +51,11 @@ import { isEmailTaken, uploadEmployeePhoto } from "@/lib/employees/service";
 import { AvatarUploader } from "./avatar-uploader";
 
 const STEPS = [
-  { id: 1, title: "Basic information", icon: User2, description: "Identity & contact" },
+  { id: 1, title: "Identity", icon: User2, description: "Who they are" },
   { id: 2, title: "Organization", icon: Building2, description: "Team & role" },
-  { id: 3, title: "Responsibilities", icon: Sparkles, description: "Skills & KPIs" },
-  { id: 4, title: "Review", icon: ClipboardCheck, description: "Confirm & create" },
+  { id: 3, title: "Skills", icon: Sparkles, description: "Skills & KPIs" },
+  { id: 4, title: "Revenue", icon: DollarSign, description: "Revenue configuration" },
+  { id: 5, title: "Review", icon: ClipboardCheck, description: "Confirm & create" },
 ] as const;
 
 const NULLABLE_MANAGER = "__none__";
@@ -56,6 +66,8 @@ const DEFAULT_VALUES: EmployeeFormValues = {
   email: "",
   phone: "",
   avatar_url: null,
+  kind: "human",
+  status: "active",
   department_id: null,
   role_title: "",
   manager_id: null,
@@ -66,6 +78,14 @@ const DEFAULT_VALUES: EmployeeFormValues = {
   bio: "",
   skills: [],
   kpis: [],
+  experience_level: null,
+  notes: "",
+  revenue_goal: null,
+  expected_roi: null,
+  cost_center: "",
+  priority: "medium",
+  revenue_category: null,
+  revenue_category_custom: "",
 };
 
 export function EmployeeWizard({
@@ -107,7 +127,7 @@ export function EmployeeWizard({
 
   const validateStep = async (): Promise<boolean> => {
     if (step === 1) {
-      const ok = await form.trigger(["full_name", "email", "phone"]);
+      const ok = await form.trigger(["full_name", "email", "phone", "kind", "status"]);
       if (!ok) return false;
       const taken = await isEmailTaken(values.email);
       if (taken) {
@@ -120,7 +140,17 @@ export function EmployeeWizard({
       return form.trigger(["employment_type", "role_title", "location", "timezone"]);
     }
     if (step === 3) {
-      return form.trigger(["skills", "kpis", "bio", "responsibilities"]);
+      return form.trigger(["skills", "kpis", "bio", "responsibilities", "experience_level", "notes"]);
+    }
+    if (step === 4) {
+      return form.trigger([
+        "revenue_goal",
+        "expected_roi",
+        "cost_center",
+        "priority",
+        "revenue_category",
+        "revenue_category_custom",
+      ]);
     }
     return true;
   };
@@ -128,7 +158,7 @@ export function EmployeeWizard({
   const next = async () => {
     const ok = await validateStep();
     if (!ok) return;
-    setStep((s) => Math.min(4, s + 1));
+    setStep((s) => Math.min(5, s + 1));
   };
 
   const back = () => setStep((s) => Math.max(1, s - 1));
@@ -168,9 +198,9 @@ export function EmployeeWizard({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[92vh] max-w-3xl overflow-hidden p-0">
         <DialogHeader className="border-b px-6 py-4">
-          <DialogTitle className="text-lg">Add employee</DialogTitle>
+          <DialogTitle className="text-lg">Employee Studio</DialogTitle>
           <DialogDescription>
-            Create a new workforce record. All fields validated on the server.
+            Design a revenue-generating employee — human, AI, or hybrid.
           </DialogDescription>
         </DialogHeader>
 
@@ -225,6 +255,51 @@ export function EmployeeWizard({
                   <Input {...form.register("phone")} placeholder="+1 555 010 4433" />
                 </Field>
               </div>
+              <div>
+                <Label className="text-xs font-medium">Employee type</Label>
+                <div className="mt-2 grid grid-cols-3 gap-2">
+                  {EMPLOYEE_KINDS.map((k) => {
+                    const Icon = k.value === "human" ? Users2 : k.value === "ai" ? Bot : Zap;
+                    const selected = values.kind === k.value;
+                    return (
+                      <button
+                        key={k.value}
+                        type="button"
+                        onClick={() => form.setValue("kind", k.value, { shouldDirty: true })}
+                        className={cn(
+                          "flex flex-col items-start gap-1 rounded-lg border p-3 text-left transition-all",
+                          selected
+                            ? "border-primary bg-primary/5 shadow-[var(--shadow-glow)]"
+                            : "hover:border-foreground/20 hover:bg-muted/40",
+                        )}
+                      >
+                        <Icon className={cn("h-4 w-4", selected ? "text-primary" : "text-muted-foreground")} />
+                        <div className="text-sm font-medium">{k.label}</div>
+                        <div className="text-[11px] text-muted-foreground">
+                          {k.value === "human"
+                            ? "Real teammate"
+                            : k.value === "ai"
+                              ? "Autonomous agent"
+                              : "Human + AI"}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+              <Field label="Status" required>
+                <Select
+                  value={values.status}
+                  onValueChange={(v) => form.setValue("status", v as EmployeeFormValues["status"], { shouldDirty: true })}
+                >
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {EMPLOYEE_STATUSES.map((s) => (
+                      <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </Field>
             </div>
           )}
 
@@ -361,10 +436,128 @@ export function EmployeeWizard({
               <Field label="Bio" error={form.formState.errors.bio?.message}>
                 <Textarea rows={3} {...form.register("bio")} placeholder="Short introduction (optional)" />
               </Field>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Field label="Experience level">
+                  <Select
+                    value={values.experience_level ?? "__none__"}
+                    onValueChange={(v) =>
+                      form.setValue("experience_level", v === "__none__" ? null : (v as EmployeeFormValues["experience_level"]), { shouldDirty: true })
+                    }
+                  >
+                    <SelectTrigger><SelectValue placeholder="Choose level" /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="__none__">Not specified</SelectItem>
+                      {EXPERIENCE_LEVELS.map((l) => (
+                        <SelectItem key={l.value} value={l.value}>{l.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </Field>
+              </div>
+              <Field label="Notes" error={form.formState.errors.notes?.message}>
+                <Textarea rows={3} {...form.register("notes")} placeholder="Anything else worth capturing (optional)" />
+              </Field>
             </div>
           )}
 
           {step === 4 && (
+            <div className="space-y-5">
+              <div className="rounded-lg border bg-primary/5 p-3 text-xs text-muted-foreground">
+                Revenue configuration turns this employee into a measurable business unit —
+                every human, AI or hybrid contributor rolls up to a category and target.
+              </div>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Field label="Revenue goal (annual, USD)" error={form.formState.errors.revenue_goal?.message}>
+                  <Input
+                    type="number"
+                    min={0}
+                    step="1000"
+                    placeholder="250000"
+                    value={values.revenue_goal ?? ""}
+                    onChange={(e) =>
+                      form.setValue(
+                        "revenue_goal",
+                        e.target.value === "" ? null : Number(e.target.value),
+                        { shouldDirty: true },
+                      )
+                    }
+                  />
+                </Field>
+                <Field label="Expected ROI (%)" error={form.formState.errors.expected_roi?.message}>
+                  <Input
+                    type="number"
+                    step="1"
+                    placeholder="120"
+                    value={values.expected_roi ?? ""}
+                    onChange={(e) =>
+                      form.setValue(
+                        "expected_roi",
+                        e.target.value === "" ? null : Number(e.target.value),
+                        { shouldDirty: true },
+                      )
+                    }
+                  />
+                </Field>
+                <Field label="Cost center" error={form.formState.errors.cost_center?.message}>
+                  <Input {...form.register("cost_center")} placeholder="CC-SALES-01" />
+                </Field>
+                <Field label="Priority" required>
+                  <Select
+                    value={values.priority}
+                    onValueChange={(v) => form.setValue("priority", v as EmployeeFormValues["priority"], { shouldDirty: true })}
+                  >
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      {EMPLOYEE_PRIORITIES.map((p) => (
+                        <SelectItem key={p.value} value={p.value}>{p.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </Field>
+              </div>
+              <div>
+                <Label className="text-xs font-medium">Revenue category</Label>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {REVENUE_CATEGORIES.map((c) => {
+                    const selected = values.revenue_category === c.value;
+                    return (
+                      <button
+                        key={c.value}
+                        type="button"
+                        onClick={() =>
+                          form.setValue(
+                            "revenue_category",
+                            selected ? null : c.value,
+                            { shouldDirty: true },
+                          )
+                        }
+                        className={cn(
+                          "rounded-full border px-3 py-1 text-xs transition-colors",
+                          selected
+                            ? "border-primary bg-primary/10 text-primary"
+                            : "text-muted-foreground hover:border-foreground/20 hover:text-foreground",
+                        )}
+                      >
+                        {c.label}
+                      </button>
+                    );
+                  })}
+                </div>
+                {values.revenue_category === "custom" && (
+                  <div className="mt-3">
+                    <Field label="Custom category" error={form.formState.errors.revenue_category_custom?.message}>
+                      <Input
+                        {...form.register("revenue_category_custom")}
+                        placeholder="e.g. Community, Partnerships"
+                      />
+                    </Field>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {step === 5 && (
             <ReviewPanel
               values={values}
               departmentName={departments.find((d) => d.id === values.department_id)?.name ?? null}
@@ -381,7 +574,7 @@ export function EmployeeWizard({
                 Back
               </Button>
             )}
-            {step < 4 ? (
+            {step < 5 ? (
               <Button type="button" onClick={next} className="bg-[image:var(--gradient-primary)]">
                 Continue
               </Button>

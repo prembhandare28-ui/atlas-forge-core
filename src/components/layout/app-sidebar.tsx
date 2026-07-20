@@ -7,6 +7,7 @@ import {
   BarChart3,
   Settings,
   Sparkles,
+  Workflow,
 } from "lucide-react";
 
 import {
@@ -26,6 +27,7 @@ import {
 const workforce = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
   { title: "Employees", url: "/employees", icon: Users },
+  { title: "Workflows", url: "/workflows", icon: Workflow },
   { title: "Attendance", url: "/attendance", icon: CalendarClock },
   { title: "Documents", url: "/documents", icon: FileText },
   { title: "Analytics", url: "/analytics", icon: BarChart3 },

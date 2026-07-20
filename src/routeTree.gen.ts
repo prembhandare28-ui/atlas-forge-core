@@ -13,12 +13,14 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedWorkflowsRouteImport } from './routes/_authenticated/workflows'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedEmployeesRouteImport } from './routes/_authenticated/employees'
 import { Route as AuthenticatedDocumentsRouteImport } from './routes/_authenticated/documents'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedAttendanceRouteImport } from './routes/_authenticated/attendance'
 import { Route as AuthenticatedAnalyticsRouteImport } from './routes/_authenticated/analytics'
+import { Route as AuthenticatedWorkflowsWorkflowIdRouteImport } from './routes/_authenticated/workflows.$workflowId'
 import { Route as AuthenticatedEmployeesEmployeeIdRouteImport } from './routes/_authenticated/employees.$employeeId'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -39,6 +41,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedWorkflowsRoute = AuthenticatedWorkflowsRouteImport.update({
+  id: '/workflows',
+  path: '/workflows',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
   id: '/settings',
@@ -70,6 +77,12 @@ const AuthenticatedAnalyticsRoute = AuthenticatedAnalyticsRouteImport.update({
   path: '/analytics',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedWorkflowsWorkflowIdRoute =
+  AuthenticatedWorkflowsWorkflowIdRouteImport.update({
+    id: '/$workflowId',
+    path: '/$workflowId',
+    getParentRoute: () => AuthenticatedWorkflowsRoute,
+  } as any)
 const AuthenticatedEmployeesEmployeeIdRoute =
   AuthenticatedEmployeesEmployeeIdRouteImport.update({
     id: '/$employeeId',
@@ -87,7 +100,9 @@ export interface FileRoutesByFullPath {
   '/documents': typeof AuthenticatedDocumentsRoute
   '/employees': typeof AuthenticatedEmployeesRouteWithChildren
   '/settings': typeof AuthenticatedSettingsRoute
+  '/workflows': typeof AuthenticatedWorkflowsRouteWithChildren
   '/employees/$employeeId': typeof AuthenticatedEmployeesEmployeeIdRoute
+  '/workflows/$workflowId': typeof AuthenticatedWorkflowsWorkflowIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -99,7 +114,9 @@ export interface FileRoutesByTo {
   '/documents': typeof AuthenticatedDocumentsRoute
   '/employees': typeof AuthenticatedEmployeesRouteWithChildren
   '/settings': typeof AuthenticatedSettingsRoute
+  '/workflows': typeof AuthenticatedWorkflowsRouteWithChildren
   '/employees/$employeeId': typeof AuthenticatedEmployeesEmployeeIdRoute
+  '/workflows/$workflowId': typeof AuthenticatedWorkflowsWorkflowIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -113,7 +130,9 @@ export interface FileRoutesById {
   '/_authenticated/documents': typeof AuthenticatedDocumentsRoute
   '/_authenticated/employees': typeof AuthenticatedEmployeesRouteWithChildren
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
+  '/_authenticated/workflows': typeof AuthenticatedWorkflowsRouteWithChildren
   '/_authenticated/employees/$employeeId': typeof AuthenticatedEmployeesEmployeeIdRoute
+  '/_authenticated/workflows/$workflowId': typeof AuthenticatedWorkflowsWorkflowIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -127,7 +146,9 @@ export interface FileRouteTypes {
     | '/documents'
     | '/employees'
     | '/settings'
+    | '/workflows'
     | '/employees/$employeeId'
+    | '/workflows/$workflowId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -139,7 +160,9 @@ export interface FileRouteTypes {
     | '/documents'
     | '/employees'
     | '/settings'
+    | '/workflows'
     | '/employees/$employeeId'
+    | '/workflows/$workflowId'
   id:
     | '__root__'
     | '/'
@@ -152,7 +175,9 @@ export interface FileRouteTypes {
     | '/_authenticated/documents'
     | '/_authenticated/employees'
     | '/_authenticated/settings'
+    | '/_authenticated/workflows'
     | '/_authenticated/employees/$employeeId'
+    | '/_authenticated/workflows/$workflowId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -191,6 +216,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/workflows': {
+      id: '/_authenticated/workflows'
+      path: '/workflows'
+      fullPath: '/workflows'
+      preLoaderRoute: typeof AuthenticatedWorkflowsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/settings': {
       id: '/_authenticated/settings'
@@ -234,6 +266,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAnalyticsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/workflows/$workflowId': {
+      id: '/_authenticated/workflows/$workflowId'
+      path: '/$workflowId'
+      fullPath: '/workflows/$workflowId'
+      preLoaderRoute: typeof AuthenticatedWorkflowsWorkflowIdRouteImport
+      parentRoute: typeof AuthenticatedWorkflowsRoute
+    }
     '/_authenticated/employees/$employeeId': {
       id: '/_authenticated/employees/$employeeId'
       path: '/$employeeId'
@@ -259,6 +298,21 @@ const AuthenticatedEmployeesRouteWithChildren =
     AuthenticatedEmployeesRouteChildren,
   )
 
+interface AuthenticatedWorkflowsRouteChildren {
+  AuthenticatedWorkflowsWorkflowIdRoute: typeof AuthenticatedWorkflowsWorkflowIdRoute
+}
+
+const AuthenticatedWorkflowsRouteChildren: AuthenticatedWorkflowsRouteChildren =
+  {
+    AuthenticatedWorkflowsWorkflowIdRoute:
+      AuthenticatedWorkflowsWorkflowIdRoute,
+  }
+
+const AuthenticatedWorkflowsRouteWithChildren =
+  AuthenticatedWorkflowsRoute._addFileChildren(
+    AuthenticatedWorkflowsRouteChildren,
+  )
+
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAnalyticsRoute: typeof AuthenticatedAnalyticsRoute
   AuthenticatedAttendanceRoute: typeof AuthenticatedAttendanceRoute
@@ -266,6 +320,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDocumentsRoute: typeof AuthenticatedDocumentsRoute
   AuthenticatedEmployeesRoute: typeof AuthenticatedEmployeesRouteWithChildren
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
+  AuthenticatedWorkflowsRoute: typeof AuthenticatedWorkflowsRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -275,6 +330,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDocumentsRoute: AuthenticatedDocumentsRoute,
   AuthenticatedEmployeesRoute: AuthenticatedEmployeesRouteWithChildren,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
+  AuthenticatedWorkflowsRoute: AuthenticatedWorkflowsRouteWithChildren,
 }
 
 const AuthenticatedRouteRouteWithChildren =

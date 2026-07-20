@@ -280,6 +280,243 @@ export type Database = {
         }
         Relationships: []
       }
+      workflow_activity: {
+        Row: {
+          action: string
+          created_at: string
+          id: string
+          metadata: Json
+          user_id: string | null
+          workflow_id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          id?: string
+          metadata?: Json
+          user_id?: string | null
+          workflow_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          id?: string
+          metadata?: Json
+          user_id?: string | null
+          workflow_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workflow_activity_workflow_id_fkey"
+            columns: ["workflow_id"]
+            isOneToOne: false
+            referencedRelation: "workflows"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      workflow_assignments: {
+        Row: {
+          created_at: string
+          employee_id: string
+          id: string
+          role: Database["public"]["Enums"]["workflow_assignment_role"]
+          workflow_id: string
+        }
+        Insert: {
+          created_at?: string
+          employee_id: string
+          id?: string
+          role?: Database["public"]["Enums"]["workflow_assignment_role"]
+          workflow_id: string
+        }
+        Update: {
+          created_at?: string
+          employee_id?: string
+          id?: string
+          role?: Database["public"]["Enums"]["workflow_assignment_role"]
+          workflow_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workflow_assignments_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "workflow_assignments_workflow_id_fkey"
+            columns: ["workflow_id"]
+            isOneToOne: false
+            referencedRelation: "workflows"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      workflow_steps: {
+        Row: {
+          assigned_employee_id: string | null
+          config: Json
+          created_at: string
+          description: string | null
+          estimated_minutes: number | null
+          id: string
+          order_index: number
+          step_type: Database["public"]["Enums"]["workflow_step_type"]
+          title: string
+          updated_at: string
+          workflow_id: string
+        }
+        Insert: {
+          assigned_employee_id?: string | null
+          config?: Json
+          created_at?: string
+          description?: string | null
+          estimated_minutes?: number | null
+          id?: string
+          order_index?: number
+          step_type?: Database["public"]["Enums"]["workflow_step_type"]
+          title: string
+          updated_at?: string
+          workflow_id: string
+        }
+        Update: {
+          assigned_employee_id?: string | null
+          config?: Json
+          created_at?: string
+          description?: string | null
+          estimated_minutes?: number | null
+          id?: string
+          order_index?: number
+          step_type?: Database["public"]["Enums"]["workflow_step_type"]
+          title?: string
+          updated_at?: string
+          workflow_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workflow_steps_assigned_employee_id_fkey"
+            columns: ["assigned_employee_id"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "workflow_steps_workflow_id_fkey"
+            columns: ["workflow_id"]
+            isOneToOne: false
+            referencedRelation: "workflows"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      workflow_versions: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          snapshot: Json
+          version: number
+          workflow_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          snapshot: Json
+          version: number
+          workflow_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          snapshot?: Json
+          version?: number
+          workflow_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workflow_versions_workflow_id_fkey"
+            columns: ["workflow_id"]
+            isOneToOne: false
+            referencedRelation: "workflows"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      workflows: {
+        Row: {
+          category: Database["public"]["Enums"]["workflow_category"]
+          created_at: string
+          created_by: string | null
+          department_id: string | null
+          description: string | null
+          estimated_duration_minutes: number | null
+          execution_count: number
+          id: string
+          last_run_at: string | null
+          metadata: Json
+          name: string
+          owner_id: string | null
+          priority: Database["public"]["Enums"]["employee_priority"]
+          status: Database["public"]["Enums"]["workflow_status"]
+          trigger_config: Json
+          trigger_type: Database["public"]["Enums"]["workflow_trigger_type"]
+          updated_at: string
+          version: number
+        }
+        Insert: {
+          category?: Database["public"]["Enums"]["workflow_category"]
+          created_at?: string
+          created_by?: string | null
+          department_id?: string | null
+          description?: string | null
+          estimated_duration_minutes?: number | null
+          execution_count?: number
+          id?: string
+          last_run_at?: string | null
+          metadata?: Json
+          name: string
+          owner_id?: string | null
+          priority?: Database["public"]["Enums"]["employee_priority"]
+          status?: Database["public"]["Enums"]["workflow_status"]
+          trigger_config?: Json
+          trigger_type?: Database["public"]["Enums"]["workflow_trigger_type"]
+          updated_at?: string
+          version?: number
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["workflow_category"]
+          created_at?: string
+          created_by?: string | null
+          department_id?: string | null
+          description?: string | null
+          estimated_duration_minutes?: number | null
+          execution_count?: number
+          id?: string
+          last_run_at?: string | null
+          metadata?: Json
+          name?: string
+          owner_id?: string | null
+          priority?: Database["public"]["Enums"]["employee_priority"]
+          status?: Database["public"]["Enums"]["workflow_status"]
+          trigger_config?: Json
+          trigger_type?: Database["public"]["Enums"]["workflow_trigger_type"]
+          updated_at?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workflows_department_id_fkey"
+            columns: ["department_id"]
+            isOneToOne: false
+            referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -313,6 +550,32 @@ export type Database = {
         | "operations"
         | "research"
         | "custom"
+      workflow_assignment_role: "owner" | "assignee" | "reviewer"
+      workflow_category:
+        | "sales"
+        | "marketing"
+        | "customer_success"
+        | "support"
+        | "operations"
+        | "finance"
+        | "hr"
+        | "research"
+        | "custom"
+      workflow_status: "draft" | "active" | "paused" | "archived"
+      workflow_step_type:
+        | "task"
+        | "approval"
+        | "decision"
+        | "notification"
+        | "delay"
+        | "integration"
+      workflow_trigger_type:
+        | "manual"
+        | "schedule"
+        | "webhook"
+        | "crm_event"
+        | "email_event"
+        | "customer_event"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -460,6 +723,35 @@ export const Constants = {
         "operations",
         "research",
         "custom",
+      ],
+      workflow_assignment_role: ["owner", "assignee", "reviewer"],
+      workflow_category: [
+        "sales",
+        "marketing",
+        "customer_success",
+        "support",
+        "operations",
+        "finance",
+        "hr",
+        "research",
+        "custom",
+      ],
+      workflow_status: ["draft", "active", "paused", "archived"],
+      workflow_step_type: [
+        "task",
+        "approval",
+        "decision",
+        "notification",
+        "delay",
+        "integration",
+      ],
+      workflow_trigger_type: [
+        "manual",
+        "schedule",
+        "webhook",
+        "crm_event",
+        "email_event",
+        "customer_event",
       ],
     },
   },

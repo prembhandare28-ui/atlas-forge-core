@@ -44,6 +44,492 @@ export type Database = {
         }
         Relationships: []
       }
+      brain_activity: {
+        Row: {
+          action: string
+          brain_id: string
+          created_at: string
+          id: string
+          metadata: Json
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          brain_id: string
+          created_at?: string
+          id?: string
+          metadata?: Json
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          brain_id?: string
+          created_at?: string
+          id?: string
+          metadata?: Json
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "brain_activity_brain_id_fkey"
+            columns: ["brain_id"]
+            isOneToOne: false
+            referencedRelation: "brains"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      brain_analytics_daily: {
+        Row: {
+          avg_response_ms: number | null
+          brain_id: string
+          created_at: string
+          csat_score: number | null
+          day: string
+          estimated_roi: number | null
+          execution_count: number
+          failure_count: number
+          id: string
+          metadata: Json
+          revenue_influence: number | null
+          success_count: number
+          usage_count: number
+        }
+        Insert: {
+          avg_response_ms?: number | null
+          brain_id: string
+          created_at?: string
+          csat_score?: number | null
+          day: string
+          estimated_roi?: number | null
+          execution_count?: number
+          failure_count?: number
+          id?: string
+          metadata?: Json
+          revenue_influence?: number | null
+          success_count?: number
+          usage_count?: number
+        }
+        Update: {
+          avg_response_ms?: number | null
+          brain_id?: string
+          created_at?: string
+          csat_score?: number | null
+          day?: string
+          estimated_roi?: number | null
+          execution_count?: number
+          failure_count?: number
+          id?: string
+          metadata?: Json
+          revenue_influence?: number | null
+          success_count?: number
+          usage_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "brain_analytics_daily_brain_id_fkey"
+            columns: ["brain_id"]
+            isOneToOne: false
+            referencedRelation: "brains"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      brain_assignments: {
+        Row: {
+          brain_id: string
+          created_at: string
+          employee_id: string | null
+          id: string
+          target_type: Database["public"]["Enums"]["brain_assignment_target"]
+          workflow_id: string | null
+        }
+        Insert: {
+          brain_id: string
+          created_at?: string
+          employee_id?: string | null
+          id?: string
+          target_type: Database["public"]["Enums"]["brain_assignment_target"]
+          workflow_id?: string | null
+        }
+        Update: {
+          brain_id?: string
+          created_at?: string
+          employee_id?: string | null
+          id?: string
+          target_type?: Database["public"]["Enums"]["brain_assignment_target"]
+          workflow_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "brain_assignments_brain_id_fkey"
+            columns: ["brain_id"]
+            isOneToOne: false
+            referencedRelation: "brains"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "brain_assignments_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "brain_assignments_workflow_id_fkey"
+            columns: ["workflow_id"]
+            isOneToOne: false
+            referencedRelation: "workflows"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      brain_knowledge: {
+        Row: {
+          brain_id: string
+          created_at: string
+          knowledge_id: string
+        }
+        Insert: {
+          brain_id: string
+          created_at?: string
+          knowledge_id: string
+        }
+        Update: {
+          brain_id?: string
+          created_at?: string
+          knowledge_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "brain_knowledge_brain_id_fkey"
+            columns: ["brain_id"]
+            isOneToOne: false
+            referencedRelation: "brains"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "brain_knowledge_knowledge_id_fkey"
+            columns: ["knowledge_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_packs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      brain_skills: {
+        Row: {
+          brain_id: string
+          created_at: string
+          skill_id: string
+        }
+        Insert: {
+          brain_id: string
+          created_at?: string
+          skill_id: string
+        }
+        Update: {
+          brain_id?: string
+          created_at?: string
+          skill_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "brain_skills_brain_id_fkey"
+            columns: ["brain_id"]
+            isOneToOne: false
+            referencedRelation: "brains"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "brain_skills_skill_id_fkey"
+            columns: ["skill_id"]
+            isOneToOne: false
+            referencedRelation: "skills"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      brain_templates: {
+        Row: {
+          author: string | null
+          category: Database["public"]["Enums"]["brain_category"]
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          is_official: boolean
+          metadata: Json
+          name: string
+          snapshot: Json
+          tags: string[]
+          updated_at: string
+          usage_count: number
+        }
+        Insert: {
+          author?: string | null
+          category?: Database["public"]["Enums"]["brain_category"]
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_official?: boolean
+          metadata?: Json
+          name: string
+          snapshot: Json
+          tags?: string[]
+          updated_at?: string
+          usage_count?: number
+        }
+        Update: {
+          author?: string | null
+          category?: Database["public"]["Enums"]["brain_category"]
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_official?: boolean
+          metadata?: Json
+          name?: string
+          snapshot?: Json
+          tags?: string[]
+          updated_at?: string
+          usage_count?: number
+        }
+        Relationships: []
+      }
+      brain_tools: {
+        Row: {
+          brain_id: string
+          created_at: string
+          permissions: string[]
+          tool_id: string
+        }
+        Insert: {
+          brain_id: string
+          created_at?: string
+          permissions?: string[]
+          tool_id: string
+        }
+        Update: {
+          brain_id?: string
+          created_at?: string
+          permissions?: string[]
+          tool_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "brain_tools_brain_id_fkey"
+            columns: ["brain_id"]
+            isOneToOne: false
+            referencedRelation: "brains"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "brain_tools_tool_id_fkey"
+            columns: ["tool_id"]
+            isOneToOne: false
+            referencedRelation: "tools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      brain_versions: {
+        Row: {
+          brain_id: string
+          created_at: string
+          created_by: string | null
+          id: string
+          notes: string | null
+          snapshot: Json
+          status: Database["public"]["Enums"]["brain_status"]
+          version: number
+        }
+        Insert: {
+          brain_id: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          notes?: string | null
+          snapshot: Json
+          status?: Database["public"]["Enums"]["brain_status"]
+          version: number
+        }
+        Update: {
+          brain_id?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          notes?: string | null
+          snapshot?: Json
+          status?: Database["public"]["Enums"]["brain_status"]
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "brain_versions_brain_id_fkey"
+            columns: ["brain_id"]
+            isOneToOne: false
+            referencedRelation: "brains"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      brains: {
+        Row: {
+          always_do: string[]
+          approval_rules: string | null
+          avatar_url: string | null
+          brain_config: Json
+          category: Database["public"]["Enums"]["brain_category"]
+          compatibility_version: string
+          context_window_tokens: number
+          created_at: string
+          created_by: string | null
+          creativity_level: number
+          decision_style: Database["public"]["Enums"]["brain_decision_style"]
+          description: string | null
+          escalation_rules: string | null
+          expected_roi: number | null
+          goals: string[]
+          id: string
+          kpis: Json
+          long_term_memory_enabled: boolean
+          marketplace_author: string | null
+          marketplace_dependencies: Json
+          marketplace_install_metadata: Json
+          marketplace_license:
+            | Database["public"]["Enums"]["marketplace_license"]
+            | null
+          marketplace_price: number | null
+          marketplace_pricing_model:
+            | Database["public"]["Enums"]["marketplace_pricing_model"]
+            | null
+          marketplace_ready: boolean
+          memory_retention_days: number
+          mission: string | null
+          name: string
+          never_do: string[]
+          organization_id: string | null
+          owner_id: string | null
+          response_depth: Database["public"]["Enums"]["brain_response_depth"]
+          risk_level: number
+          session_memory_enabled: boolean
+          status: Database["public"]["Enums"]["brain_status"]
+          success_definition: string | null
+          tags: string[]
+          template_id: string | null
+          tone: Database["public"]["Enums"]["brain_tone"]
+          updated_at: string
+          version: number
+          visibility: Database["public"]["Enums"]["brain_visibility"]
+        }
+        Insert: {
+          always_do?: string[]
+          approval_rules?: string | null
+          avatar_url?: string | null
+          brain_config?: Json
+          category?: Database["public"]["Enums"]["brain_category"]
+          compatibility_version?: string
+          context_window_tokens?: number
+          created_at?: string
+          created_by?: string | null
+          creativity_level?: number
+          decision_style?: Database["public"]["Enums"]["brain_decision_style"]
+          description?: string | null
+          escalation_rules?: string | null
+          expected_roi?: number | null
+          goals?: string[]
+          id?: string
+          kpis?: Json
+          long_term_memory_enabled?: boolean
+          marketplace_author?: string | null
+          marketplace_dependencies?: Json
+          marketplace_install_metadata?: Json
+          marketplace_license?:
+            | Database["public"]["Enums"]["marketplace_license"]
+            | null
+          marketplace_price?: number | null
+          marketplace_pricing_model?:
+            | Database["public"]["Enums"]["marketplace_pricing_model"]
+            | null
+          marketplace_ready?: boolean
+          memory_retention_days?: number
+          mission?: string | null
+          name: string
+          never_do?: string[]
+          organization_id?: string | null
+          owner_id?: string | null
+          response_depth?: Database["public"]["Enums"]["brain_response_depth"]
+          risk_level?: number
+          session_memory_enabled?: boolean
+          status?: Database["public"]["Enums"]["brain_status"]
+          success_definition?: string | null
+          tags?: string[]
+          template_id?: string | null
+          tone?: Database["public"]["Enums"]["brain_tone"]
+          updated_at?: string
+          version?: number
+          visibility?: Database["public"]["Enums"]["brain_visibility"]
+        }
+        Update: {
+          always_do?: string[]
+          approval_rules?: string | null
+          avatar_url?: string | null
+          brain_config?: Json
+          category?: Database["public"]["Enums"]["brain_category"]
+          compatibility_version?: string
+          context_window_tokens?: number
+          created_at?: string
+          created_by?: string | null
+          creativity_level?: number
+          decision_style?: Database["public"]["Enums"]["brain_decision_style"]
+          description?: string | null
+          escalation_rules?: string | null
+          expected_roi?: number | null
+          goals?: string[]
+          id?: string
+          kpis?: Json
+          long_term_memory_enabled?: boolean
+          marketplace_author?: string | null
+          marketplace_dependencies?: Json
+          marketplace_install_metadata?: Json
+          marketplace_license?:
+            | Database["public"]["Enums"]["marketplace_license"]
+            | null
+          marketplace_price?: number | null
+          marketplace_pricing_model?:
+            | Database["public"]["Enums"]["marketplace_pricing_model"]
+            | null
+          marketplace_ready?: boolean
+          memory_retention_days?: number
+          mission?: string | null
+          name?: string
+          never_do?: string[]
+          organization_id?: string | null
+          owner_id?: string | null
+          response_depth?: Database["public"]["Enums"]["brain_response_depth"]
+          risk_level?: number
+          session_memory_enabled?: boolean
+          status?: Database["public"]["Enums"]["brain_status"]
+          success_definition?: string | null
+          tags?: string[]
+          template_id?: string | null
+          tone?: Database["public"]["Enums"]["brain_tone"]
+          updated_at?: string
+          version?: number
+          visibility?: Database["public"]["Enums"]["brain_visibility"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "brains_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "brain_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       departments: {
         Row: {
           created_at: string
@@ -226,6 +712,107 @@ export type Database = {
           },
         ]
       }
+      knowledge_packs: {
+        Row: {
+          category: Database["public"]["Enums"]["knowledge_category"]
+          content: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          file_path: string | null
+          file_size_bytes: number | null
+          id: string
+          metadata: Json
+          name: string
+          organization_id: string | null
+          owner_id: string | null
+          source_type: Database["public"]["Enums"]["knowledge_source_type"]
+          source_url: string | null
+          status: Database["public"]["Enums"]["knowledge_status"]
+          tags: string[]
+          updated_at: string
+          version: number
+          visibility: Database["public"]["Enums"]["brain_visibility"]
+        }
+        Insert: {
+          category?: Database["public"]["Enums"]["knowledge_category"]
+          content?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          file_path?: string | null
+          file_size_bytes?: number | null
+          id?: string
+          metadata?: Json
+          name: string
+          organization_id?: string | null
+          owner_id?: string | null
+          source_type?: Database["public"]["Enums"]["knowledge_source_type"]
+          source_url?: string | null
+          status?: Database["public"]["Enums"]["knowledge_status"]
+          tags?: string[]
+          updated_at?: string
+          version?: number
+          visibility?: Database["public"]["Enums"]["brain_visibility"]
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["knowledge_category"]
+          content?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          file_path?: string | null
+          file_size_bytes?: number | null
+          id?: string
+          metadata?: Json
+          name?: string
+          organization_id?: string | null
+          owner_id?: string | null
+          source_type?: Database["public"]["Enums"]["knowledge_source_type"]
+          source_url?: string | null
+          status?: Database["public"]["Enums"]["knowledge_status"]
+          tags?: string[]
+          updated_at?: string
+          version?: number
+          visibility?: Database["public"]["Enums"]["brain_visibility"]
+        }
+        Relationships: []
+      }
+      knowledge_versions: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          knowledge_id: string
+          snapshot: Json
+          version: number
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          knowledge_id: string
+          snapshot: Json
+          version: number
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          knowledge_id?: string
+          snapshot?: Json
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "knowledge_versions_knowledge_id_fkey"
+            columns: ["knowledge_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_packs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -255,6 +842,120 @@ export type Database = {
           full_name?: string | null
           id?: string
           job_title?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      skills: {
+        Row: {
+          category: Database["public"]["Enums"]["skill_category"]
+          created_at: string
+          created_by: string | null
+          dependencies: string[]
+          description: string | null
+          difficulty: Database["public"]["Enums"]["skill_difficulty"]
+          id: string
+          metadata: Json
+          name: string
+          required_knowledge: string[]
+          required_tools: string[]
+          tags: string[]
+          updated_at: string
+        }
+        Insert: {
+          category?: Database["public"]["Enums"]["skill_category"]
+          created_at?: string
+          created_by?: string | null
+          dependencies?: string[]
+          description?: string | null
+          difficulty?: Database["public"]["Enums"]["skill_difficulty"]
+          id?: string
+          metadata?: Json
+          name: string
+          required_knowledge?: string[]
+          required_tools?: string[]
+          tags?: string[]
+          updated_at?: string
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["skill_category"]
+          created_at?: string
+          created_by?: string | null
+          dependencies?: string[]
+          description?: string | null
+          difficulty?: Database["public"]["Enums"]["skill_difficulty"]
+          id?: string
+          metadata?: Json
+          name?: string
+          required_knowledge?: string[]
+          required_tools?: string[]
+          tags?: string[]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      tools: {
+        Row: {
+          auth_type: Database["public"]["Enums"]["tool_auth_type"]
+          base_url: string | null
+          config: Json
+          created_at: string
+          created_by: string | null
+          description: string | null
+          environment: Database["public"]["Enums"]["tool_environment"]
+          health: Database["public"]["Enums"]["tool_health"]
+          icon: string | null
+          id: string
+          metadata: Json
+          name: string
+          owner_id: string | null
+          permissions: string[]
+          provider: string
+          runtime_ready: boolean
+          scopes: string[]
+          status: Database["public"]["Enums"]["tool_status"]
+          updated_at: string
+        }
+        Insert: {
+          auth_type?: Database["public"]["Enums"]["tool_auth_type"]
+          base_url?: string | null
+          config?: Json
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          environment?: Database["public"]["Enums"]["tool_environment"]
+          health?: Database["public"]["Enums"]["tool_health"]
+          icon?: string | null
+          id?: string
+          metadata?: Json
+          name: string
+          owner_id?: string | null
+          permissions?: string[]
+          provider: string
+          runtime_ready?: boolean
+          scopes?: string[]
+          status?: Database["public"]["Enums"]["tool_status"]
+          updated_at?: string
+        }
+        Update: {
+          auth_type?: Database["public"]["Enums"]["tool_auth_type"]
+          base_url?: string | null
+          config?: Json
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          environment?: Database["public"]["Enums"]["tool_environment"]
+          health?: Database["public"]["Enums"]["tool_health"]
+          icon?: string | null
+          id?: string
+          metadata?: Json
+          name?: string
+          owner_id?: string | null
+          permissions?: string[]
+          provider?: string
+          runtime_ready?: boolean
+          scopes?: string[]
+          status?: Database["public"]["Enums"]["tool_status"]
           updated_at?: string
         }
         Relationships: []
@@ -532,6 +1233,40 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "manager" | "employee"
+      brain_assignment_target: "employee" | "workflow"
+      brain_category:
+        | "sales"
+        | "support"
+        | "operations"
+        | "marketing"
+        | "research"
+        | "finance"
+        | "growth"
+        | "recruitment"
+        | "executive"
+        | "custom"
+      brain_decision_style:
+        | "conservative"
+        | "balanced"
+        | "aggressive"
+        | "data_driven"
+        | "intuitive"
+      brain_response_depth: "brief" | "standard" | "detailed" | "exhaustive"
+      brain_status:
+        | "draft"
+        | "published"
+        | "stable"
+        | "experimental"
+        | "archived"
+      brain_tone:
+        | "formal"
+        | "friendly"
+        | "concise"
+        | "persuasive"
+        | "empathetic"
+        | "analytical"
+        | "playful"
+      brain_visibility: "private" | "organization" | "public"
       deployment_status: "draft" | "ready" | "deployed" | "paused" | "error"
       employee_kind: "human" | "ai" | "hybrid"
       employee_priority: "low" | "medium" | "high" | "critical"
@@ -543,6 +1278,42 @@ export type Database = {
         | "intern"
         | "consultant"
       experience_level: "junior" | "mid" | "senior" | "lead" | "principal"
+      knowledge_category:
+        | "general"
+        | "product"
+        | "sales"
+        | "support"
+        | "marketing"
+        | "operations"
+        | "finance"
+        | "hr"
+        | "legal"
+        | "engineering"
+        | "custom"
+      knowledge_source_type:
+        | "pdf"
+        | "docx"
+        | "markdown"
+        | "text"
+        | "faq"
+        | "sop"
+        | "pricing"
+        | "policy"
+        | "notes"
+        | "url"
+      knowledge_status: "draft" | "active" | "archived"
+      marketplace_license:
+        | "proprietary"
+        | "mit"
+        | "apache_2"
+        | "commercial"
+        | "custom"
+      marketplace_pricing_model:
+        | "free"
+        | "one_time"
+        | "subscription"
+        | "usage_based"
+        | "enterprise"
       revenue_category:
         | "sales"
         | "marketing"
@@ -550,6 +1321,26 @@ export type Database = {
         | "operations"
         | "research"
         | "custom"
+      skill_category:
+        | "sales"
+        | "support"
+        | "research"
+        | "marketing"
+        | "recruitment"
+        | "operations"
+        | "finance"
+        | "negotiation"
+        | "planning"
+        | "analysis"
+        | "writing"
+        | "translation"
+        | "coding"
+        | "custom"
+      skill_difficulty: "beginner" | "intermediate" | "advanced" | "expert"
+      tool_auth_type: "none" | "api_key" | "oauth2" | "basic" | "custom"
+      tool_environment: "development" | "staging" | "production"
+      tool_health: "unknown" | "healthy" | "degraded" | "down"
+      tool_status: "inactive" | "active" | "deprecated"
       workflow_assignment_role: "owner" | "assignee" | "reviewer"
       workflow_category:
         | "sales"
@@ -704,6 +1495,44 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "manager", "employee"],
+      brain_assignment_target: ["employee", "workflow"],
+      brain_category: [
+        "sales",
+        "support",
+        "operations",
+        "marketing",
+        "research",
+        "finance",
+        "growth",
+        "recruitment",
+        "executive",
+        "custom",
+      ],
+      brain_decision_style: [
+        "conservative",
+        "balanced",
+        "aggressive",
+        "data_driven",
+        "intuitive",
+      ],
+      brain_response_depth: ["brief", "standard", "detailed", "exhaustive"],
+      brain_status: [
+        "draft",
+        "published",
+        "stable",
+        "experimental",
+        "archived",
+      ],
+      brain_tone: [
+        "formal",
+        "friendly",
+        "concise",
+        "persuasive",
+        "empathetic",
+        "analytical",
+        "playful",
+      ],
+      brain_visibility: ["private", "organization", "public"],
       deployment_status: ["draft", "ready", "deployed", "paused", "error"],
       employee_kind: ["human", "ai", "hybrid"],
       employee_priority: ["low", "medium", "high", "critical"],
@@ -716,6 +1545,46 @@ export const Constants = {
         "consultant",
       ],
       experience_level: ["junior", "mid", "senior", "lead", "principal"],
+      knowledge_category: [
+        "general",
+        "product",
+        "sales",
+        "support",
+        "marketing",
+        "operations",
+        "finance",
+        "hr",
+        "legal",
+        "engineering",
+        "custom",
+      ],
+      knowledge_source_type: [
+        "pdf",
+        "docx",
+        "markdown",
+        "text",
+        "faq",
+        "sop",
+        "pricing",
+        "policy",
+        "notes",
+        "url",
+      ],
+      knowledge_status: ["draft", "active", "archived"],
+      marketplace_license: [
+        "proprietary",
+        "mit",
+        "apache_2",
+        "commercial",
+        "custom",
+      ],
+      marketplace_pricing_model: [
+        "free",
+        "one_time",
+        "subscription",
+        "usage_based",
+        "enterprise",
+      ],
       revenue_category: [
         "sales",
         "marketing",
@@ -724,6 +1593,27 @@ export const Constants = {
         "research",
         "custom",
       ],
+      skill_category: [
+        "sales",
+        "support",
+        "research",
+        "marketing",
+        "recruitment",
+        "operations",
+        "finance",
+        "negotiation",
+        "planning",
+        "analysis",
+        "writing",
+        "translation",
+        "coding",
+        "custom",
+      ],
+      skill_difficulty: ["beginner", "intermediate", "advanced", "expert"],
+      tool_auth_type: ["none", "api_key", "oauth2", "basic", "custom"],
+      tool_environment: ["development", "staging", "production"],
+      tool_health: ["unknown", "healthy", "degraded", "down"],
+      tool_status: ["inactive", "active", "deprecated"],
       workflow_assignment_role: ["owner", "assignee", "reviewer"],
       workflow_category: [
         "sales",

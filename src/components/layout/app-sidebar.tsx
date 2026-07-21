@@ -8,6 +8,10 @@ import {
   Settings,
   Sparkles,
   Workflow,
+  Brain,
+  BookOpen,
+  Plug,
+  LayoutTemplate,
 } from "lucide-react";
 
 import {
@@ -31,6 +35,14 @@ const workforce = [
   { title: "Attendance", url: "/attendance", icon: CalendarClock },
   { title: "Documents", url: "/documents", icon: FileText },
   { title: "Analytics", url: "/analytics", icon: BarChart3 },
+];
+
+const intelligence = [
+  { title: "Brains", url: "/brains", icon: Brain },
+  { title: "Knowledge", url: "/knowledge", icon: BookOpen },
+  { title: "Skills", url: "/skills", icon: Sparkles },
+  { title: "Tools", url: "/tools", icon: Plug },
+  { title: "Templates", url: "/templates", icon: LayoutTemplate },
 ];
 
 const system = [
@@ -66,6 +78,24 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {workforce.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild isActive={isActive(item.url)} tooltip={item.title}>
+                    <Link to={item.url} className="flex items-center gap-2">
+                      <item.icon className="h-4 w-4" />
+                      <span>{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel>Intelligence</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {intelligence.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild isActive={isActive(item.url)} tooltip={item.title}>
                     <Link to={item.url} className="flex items-center gap-2">

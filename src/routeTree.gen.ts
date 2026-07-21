@@ -14,14 +14,20 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedWorkflowsRouteImport } from './routes/_authenticated/workflows'
+import { Route as AuthenticatedToolsRouteImport } from './routes/_authenticated/tools'
+import { Route as AuthenticatedTemplatesRouteImport } from './routes/_authenticated/templates'
+import { Route as AuthenticatedSkillsRouteImport } from './routes/_authenticated/skills'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
+import { Route as AuthenticatedKnowledgeRouteImport } from './routes/_authenticated/knowledge'
 import { Route as AuthenticatedEmployeesRouteImport } from './routes/_authenticated/employees'
 import { Route as AuthenticatedDocumentsRouteImport } from './routes/_authenticated/documents'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedBrainsRouteImport } from './routes/_authenticated/brains'
 import { Route as AuthenticatedAttendanceRouteImport } from './routes/_authenticated/attendance'
 import { Route as AuthenticatedAnalyticsRouteImport } from './routes/_authenticated/analytics'
 import { Route as AuthenticatedWorkflowsWorkflowIdRouteImport } from './routes/_authenticated/workflows.$workflowId'
 import { Route as AuthenticatedEmployeesEmployeeIdRouteImport } from './routes/_authenticated/employees.$employeeId'
+import { Route as AuthenticatedBrainsBrainIdRouteImport } from './routes/_authenticated/brains.$brainId'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -47,9 +53,29 @@ const AuthenticatedWorkflowsRoute = AuthenticatedWorkflowsRouteImport.update({
   path: '/workflows',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedToolsRoute = AuthenticatedToolsRouteImport.update({
+  id: '/tools',
+  path: '/tools',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedTemplatesRoute = AuthenticatedTemplatesRouteImport.update({
+  id: '/templates',
+  path: '/templates',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedSkillsRoute = AuthenticatedSkillsRouteImport.update({
+  id: '/skills',
+  path: '/skills',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedKnowledgeRoute = AuthenticatedKnowledgeRouteImport.update({
+  id: '/knowledge',
+  path: '/knowledge',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedEmployeesRoute = AuthenticatedEmployeesRouteImport.update({
@@ -65,6 +91,11 @@ const AuthenticatedDocumentsRoute = AuthenticatedDocumentsRouteImport.update({
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedBrainsRoute = AuthenticatedBrainsRouteImport.update({
+  id: '/brains',
+  path: '/brains',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedAttendanceRoute = AuthenticatedAttendanceRouteImport.update({
@@ -89,6 +120,12 @@ const AuthenticatedEmployeesEmployeeIdRoute =
     path: '/$employeeId',
     getParentRoute: () => AuthenticatedEmployeesRoute,
   } as any)
+const AuthenticatedBrainsBrainIdRoute =
+  AuthenticatedBrainsBrainIdRouteImport.update({
+    id: '/$brainId',
+    path: '/$brainId',
+    getParentRoute: () => AuthenticatedBrainsRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -96,11 +133,17 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/analytics': typeof AuthenticatedAnalyticsRoute
   '/attendance': typeof AuthenticatedAttendanceRoute
+  '/brains': typeof AuthenticatedBrainsRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/documents': typeof AuthenticatedDocumentsRoute
   '/employees': typeof AuthenticatedEmployeesRouteWithChildren
+  '/knowledge': typeof AuthenticatedKnowledgeRoute
   '/settings': typeof AuthenticatedSettingsRoute
+  '/skills': typeof AuthenticatedSkillsRoute
+  '/templates': typeof AuthenticatedTemplatesRoute
+  '/tools': typeof AuthenticatedToolsRoute
   '/workflows': typeof AuthenticatedWorkflowsRouteWithChildren
+  '/brains/$brainId': typeof AuthenticatedBrainsBrainIdRoute
   '/employees/$employeeId': typeof AuthenticatedEmployeesEmployeeIdRoute
   '/workflows/$workflowId': typeof AuthenticatedWorkflowsWorkflowIdRoute
 }
@@ -110,11 +153,17 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/analytics': typeof AuthenticatedAnalyticsRoute
   '/attendance': typeof AuthenticatedAttendanceRoute
+  '/brains': typeof AuthenticatedBrainsRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/documents': typeof AuthenticatedDocumentsRoute
   '/employees': typeof AuthenticatedEmployeesRouteWithChildren
+  '/knowledge': typeof AuthenticatedKnowledgeRoute
   '/settings': typeof AuthenticatedSettingsRoute
+  '/skills': typeof AuthenticatedSkillsRoute
+  '/templates': typeof AuthenticatedTemplatesRoute
+  '/tools': typeof AuthenticatedToolsRoute
   '/workflows': typeof AuthenticatedWorkflowsRouteWithChildren
+  '/brains/$brainId': typeof AuthenticatedBrainsBrainIdRoute
   '/employees/$employeeId': typeof AuthenticatedEmployeesEmployeeIdRoute
   '/workflows/$workflowId': typeof AuthenticatedWorkflowsWorkflowIdRoute
 }
@@ -126,11 +175,17 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/_authenticated/analytics': typeof AuthenticatedAnalyticsRoute
   '/_authenticated/attendance': typeof AuthenticatedAttendanceRoute
+  '/_authenticated/brains': typeof AuthenticatedBrainsRouteWithChildren
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/documents': typeof AuthenticatedDocumentsRoute
   '/_authenticated/employees': typeof AuthenticatedEmployeesRouteWithChildren
+  '/_authenticated/knowledge': typeof AuthenticatedKnowledgeRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
+  '/_authenticated/skills': typeof AuthenticatedSkillsRoute
+  '/_authenticated/templates': typeof AuthenticatedTemplatesRoute
+  '/_authenticated/tools': typeof AuthenticatedToolsRoute
   '/_authenticated/workflows': typeof AuthenticatedWorkflowsRouteWithChildren
+  '/_authenticated/brains/$brainId': typeof AuthenticatedBrainsBrainIdRoute
   '/_authenticated/employees/$employeeId': typeof AuthenticatedEmployeesEmployeeIdRoute
   '/_authenticated/workflows/$workflowId': typeof AuthenticatedWorkflowsWorkflowIdRoute
 }
@@ -142,11 +197,17 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/analytics'
     | '/attendance'
+    | '/brains'
     | '/dashboard'
     | '/documents'
     | '/employees'
+    | '/knowledge'
     | '/settings'
+    | '/skills'
+    | '/templates'
+    | '/tools'
     | '/workflows'
+    | '/brains/$brainId'
     | '/employees/$employeeId'
     | '/workflows/$workflowId'
   fileRoutesByTo: FileRoutesByTo
@@ -156,11 +217,17 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/analytics'
     | '/attendance'
+    | '/brains'
     | '/dashboard'
     | '/documents'
     | '/employees'
+    | '/knowledge'
     | '/settings'
+    | '/skills'
+    | '/templates'
+    | '/tools'
     | '/workflows'
+    | '/brains/$brainId'
     | '/employees/$employeeId'
     | '/workflows/$workflowId'
   id:
@@ -171,11 +238,17 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/_authenticated/analytics'
     | '/_authenticated/attendance'
+    | '/_authenticated/brains'
     | '/_authenticated/dashboard'
     | '/_authenticated/documents'
     | '/_authenticated/employees'
+    | '/_authenticated/knowledge'
     | '/_authenticated/settings'
+    | '/_authenticated/skills'
+    | '/_authenticated/templates'
+    | '/_authenticated/tools'
     | '/_authenticated/workflows'
+    | '/_authenticated/brains/$brainId'
     | '/_authenticated/employees/$employeeId'
     | '/_authenticated/workflows/$workflowId'
   fileRoutesById: FileRoutesById
@@ -224,11 +297,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedWorkflowsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/tools': {
+      id: '/_authenticated/tools'
+      path: '/tools'
+      fullPath: '/tools'
+      preLoaderRoute: typeof AuthenticatedToolsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/templates': {
+      id: '/_authenticated/templates'
+      path: '/templates'
+      fullPath: '/templates'
+      preLoaderRoute: typeof AuthenticatedTemplatesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/skills': {
+      id: '/_authenticated/skills'
+      path: '/skills'
+      fullPath: '/skills'
+      preLoaderRoute: typeof AuthenticatedSkillsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/settings': {
       id: '/_authenticated/settings'
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof AuthenticatedSettingsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/knowledge': {
+      id: '/_authenticated/knowledge'
+      path: '/knowledge'
+      fullPath: '/knowledge'
+      preLoaderRoute: typeof AuthenticatedKnowledgeRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/employees': {
@@ -250,6 +351,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/brains': {
+      id: '/_authenticated/brains'
+      path: '/brains'
+      fullPath: '/brains'
+      preLoaderRoute: typeof AuthenticatedBrainsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/attendance': {
@@ -280,8 +388,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedEmployeesEmployeeIdRouteImport
       parentRoute: typeof AuthenticatedEmployeesRoute
     }
+    '/_authenticated/brains/$brainId': {
+      id: '/_authenticated/brains/$brainId'
+      path: '/$brainId'
+      fullPath: '/brains/$brainId'
+      preLoaderRoute: typeof AuthenticatedBrainsBrainIdRouteImport
+      parentRoute: typeof AuthenticatedBrainsRoute
+    }
   }
 }
+
+interface AuthenticatedBrainsRouteChildren {
+  AuthenticatedBrainsBrainIdRoute: typeof AuthenticatedBrainsBrainIdRoute
+}
+
+const AuthenticatedBrainsRouteChildren: AuthenticatedBrainsRouteChildren = {
+  AuthenticatedBrainsBrainIdRoute: AuthenticatedBrainsBrainIdRoute,
+}
+
+const AuthenticatedBrainsRouteWithChildren =
+  AuthenticatedBrainsRoute._addFileChildren(AuthenticatedBrainsRouteChildren)
 
 interface AuthenticatedEmployeesRouteChildren {
   AuthenticatedEmployeesEmployeeIdRoute: typeof AuthenticatedEmployeesEmployeeIdRoute
@@ -316,20 +442,30 @@ const AuthenticatedWorkflowsRouteWithChildren =
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAnalyticsRoute: typeof AuthenticatedAnalyticsRoute
   AuthenticatedAttendanceRoute: typeof AuthenticatedAttendanceRoute
+  AuthenticatedBrainsRoute: typeof AuthenticatedBrainsRouteWithChildren
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedDocumentsRoute: typeof AuthenticatedDocumentsRoute
   AuthenticatedEmployeesRoute: typeof AuthenticatedEmployeesRouteWithChildren
+  AuthenticatedKnowledgeRoute: typeof AuthenticatedKnowledgeRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
+  AuthenticatedSkillsRoute: typeof AuthenticatedSkillsRoute
+  AuthenticatedTemplatesRoute: typeof AuthenticatedTemplatesRoute
+  AuthenticatedToolsRoute: typeof AuthenticatedToolsRoute
   AuthenticatedWorkflowsRoute: typeof AuthenticatedWorkflowsRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAnalyticsRoute: AuthenticatedAnalyticsRoute,
   AuthenticatedAttendanceRoute: AuthenticatedAttendanceRoute,
+  AuthenticatedBrainsRoute: AuthenticatedBrainsRouteWithChildren,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedDocumentsRoute: AuthenticatedDocumentsRoute,
   AuthenticatedEmployeesRoute: AuthenticatedEmployeesRouteWithChildren,
+  AuthenticatedKnowledgeRoute: AuthenticatedKnowledgeRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
+  AuthenticatedSkillsRoute: AuthenticatedSkillsRoute,
+  AuthenticatedTemplatesRoute: AuthenticatedTemplatesRoute,
+  AuthenticatedToolsRoute: AuthenticatedToolsRoute,
   AuthenticatedWorkflowsRoute: AuthenticatedWorkflowsRouteWithChildren,
 }
 

@@ -14,6 +14,40 @@ export type KernelLogLevel = "debug" | "info" | "warn" | "error";
 /** Structured, serializable metadata used across kernel primitives. */
 export type KernelMetadata = Readonly<Record<string, string | number | boolean | null>>;
 
+/**
+ * Feature flags. Additive only — unknown flags are ignored, so future
+ * subsystems can ship behind a flag without breaking existing callers.
+ */
+export interface KernelFeatureFlags {
+  readonly [flag: string]: boolean | undefined;
+}
+
+/**
+ * Injectable service container. Sprint 008+ registers concrete subsystems
+ * here (mission runtime, memory, knowledge, tools) without kernel changes.
+ */
+export interface KernelServices {
+  readonly [serviceId: string]: unknown;
+}
+
+/** Immutable runtime identity of a kernel instance. */
+export interface KernelRuntimeInfo {
+  readonly kernelId: string;
+  readonly version: string;
+  readonly runtimeId: string;
+  readonly createdAt: number;
+  readonly startedAt?: number;
+  readonly uptimeMs: number;
+}
+
+/** Aggregate task counters. Placeholder surface: no business semantics. */
+export interface KernelMetrics {
+  readonly totalTasks: number;
+  readonly runningTasks: number;
+  readonly completedTasks: number;
+  readonly failedTasks: number;
+}
+
 export interface KernelLogger {
   log(level: KernelLogLevel, message: string, metadata?: KernelMetadata): void;
 }
@@ -40,10 +74,17 @@ export interface KernelHealthProbe {
  */
 export interface KernelContext {
   readonly kernelId: string;
+  readonly version: string;
+  readonly runtimeId: string;
   readonly clock: KernelClock;
   readonly logger: KernelLogger;
   readonly events: KernelEventEmitter;
   readonly metadata: KernelMetadata;
+  readonly features: KernelFeatureFlags;
+  readonly services: KernelServices;
+  /** Typed lookup helper for injected services. Returns undefined when absent. */
+  getService<T>(serviceId: string): T | undefined;
+  isEnabled(flag: string): boolean;
 }
 
 /** A unit of work coordinated by the kernel lifecycle. */
@@ -69,10 +110,14 @@ export interface KernelTaskSnapshot {
 
 export interface KernelStatus {
   readonly kernelId: string;
+  readonly version: string;
+  readonly runtimeId: string;
   readonly phase: KernelPhase;
   readonly health: KernelHealthLevel;
+  readonly startedAt?: number;
   readonly bootedAt?: number;
   readonly uptimeMs: number;
+  readonly metrics: KernelMetrics;
   readonly tasks: readonly KernelTaskSnapshot[];
   readonly reports: readonly (KernelHealthReport & { readonly id: string })[];
 }

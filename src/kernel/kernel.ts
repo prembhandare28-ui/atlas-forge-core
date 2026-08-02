@@ -7,20 +7,41 @@ import { KernelTaskRegistry } from "./task-registry";
 import type {
   KernelClock,
   KernelContext,
+  KernelFeatureFlags,
   KernelHealthLevel,
   KernelHealthProbe,
   KernelLogger,
   KernelMetadata,
+  KernelMetrics,
   KernelPhase,
+  KernelRuntimeInfo,
+  KernelServices,
   KernelStatus,
   KernelTask,
 } from "./types";
 
+/** Kernel API version. Bump when the public kernel contract changes. */
+export const KERNEL_VERSION = "0.1.0";
+
+let runtimeSequence = 0;
+
+function nextRuntimeId(kernelId: string, at: number): string {
+  runtimeSequence += 1;
+  return `${kernelId}-${at.toString(36)}-${runtimeSequence.toString(36)}`;
+}
+
 export interface KernelOptions {
   readonly kernelId?: string;
+  /** Overrides the generated runtime id (useful in tests). */
+  readonly runtimeId?: string;
+  readonly version?: string;
   readonly clock?: KernelClock;
   readonly logger?: KernelLogger;
   readonly metadata?: KernelMetadata;
+  /** Additive feature flags; unknown flags are ignored. */
+  readonly features?: KernelFeatureFlags;
+  /** Injectable services made available through the kernel context. */
+  readonly services?: KernelServices;
   /** Boot fails fast by default; set false to boot in a degraded phase. */
   readonly failFast?: boolean;
 }
@@ -34,6 +55,9 @@ export class AtlasKernel {
   private readonly health: KernelHealthMonitor;
   private readonly context: KernelContext;
   private readonly failFast: boolean;
+  private readonly version: string;
+  private readonly runtimeId: string;
+  private readonly createdAt: number;
   private phase: KernelPhase = "idle";
   private healthLevel: KernelHealthLevel = "unknown";
   private bootedAt?: number;
@@ -43,12 +67,24 @@ export class AtlasKernel {
     const clock = options.clock ?? systemClock;
     this.failFast = options.failFast ?? true;
     this.health = new KernelHealthMonitor(clock);
+    const kernelId = options.kernelId ?? "atlas-kernel";
+    this.version = options.version ?? KERNEL_VERSION;
+    this.createdAt = clock.now();
+    this.runtimeId = options.runtimeId ?? nextRuntimeId(kernelId, this.createdAt);
+    const features = options.features ?? {};
+    const services = options.services ?? {};
     this.context = {
-      kernelId: options.kernelId ?? "atlas-kernel",
+      kernelId,
+      version: this.version,
+      runtimeId: this.runtimeId,
       clock,
       logger: options.logger ?? silentLogger,
       events: new KernelEventBus(clock),
       metadata: options.metadata ?? {},
+      features,
+      services,
+      getService: <T,>(serviceId: string) => services[serviceId] as T | undefined,
+      isEnabled: (flag: string) => features[flag] === true,
     };
   }
 
@@ -59,6 +95,24 @@ export class AtlasKernel {
 
   getPhase(): KernelPhase {
     return this.phase;
+  }
+
+  /** Immutable runtime metadata (version, runtimeId, startedAt, uptime). */
+  getRuntimeInfo(): KernelRuntimeInfo {
+    const now = this.context.clock.now();
+    return {
+      kernelId: this.context.kernelId,
+      version: this.version,
+      runtimeId: this.runtimeId,
+      createdAt: this.createdAt,
+      startedAt: this.bootedAt,
+      uptimeMs: this.bootedAt ? Math.max(0, now - this.bootedAt) : 0,
+    };
+  }
+
+  /** Placeholder metrics surface — task counters only, no business logic. */
+  getMetrics(): KernelMetrics {
+    return this.registry.metrics();
   }
 
   isRunning(): boolean {
@@ -109,10 +163,14 @@ export class AtlasKernel {
     const now = this.context.clock.now();
     return {
       kernelId: this.context.kernelId,
+      version: this.version,
+      runtimeId: this.runtimeId,
       phase: this.phase,
       health: this.isRunning() ? this.healthLevel : "unknown",
+      startedAt: this.bootedAt,
       bootedAt: this.bootedAt,
       uptimeMs: this.bootedAt ? Math.max(0, now - this.bootedAt) : 0,
+      metrics: this.registry.metrics(),
       tasks: this.registry.snapshot(),
       reports,
     };

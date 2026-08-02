@@ -2,7 +2,7 @@
  * ATLAS Kernel — public API (Sprint 007 foundation).
  * UI-independent, side-effect free on import.
  */
-export { AtlasKernel, type KernelOptions } from "./kernel";
+export { AtlasKernel, KERNEL_VERSION, type KernelOptions } from "./kernel";
 export { KernelTaskRegistry } from "./task-registry";
 export { KernelHealthMonitor, type IdentifiedHealthReport } from "./health-monitor";
 export { KernelEventBus } from "./event-bus";
@@ -17,13 +17,17 @@ export type {
   KernelEventEmitter,
   KernelEventListener,
   KernelEventName,
+  KernelFeatureFlags,
   KernelHealthLevel,
   KernelHealthProbe,
   KernelHealthReport,
   KernelLogLevel,
   KernelLogger,
   KernelMetadata,
+  KernelMetrics,
   KernelPhase,
+  KernelRuntimeInfo,
+  KernelServices,
   KernelStatus,
   KernelTask,
   KernelTaskSnapshot,

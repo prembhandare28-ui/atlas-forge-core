@@ -100,7 +100,6 @@ export class AtlasKernel {
     return this.getStatus();
   }
 
-  async getStatus(): Promise<KernelStatus>;
   async getStatus(): Promise<KernelStatus> {
     const reports = this.isRunning() ? await this.health.collect() : [];
     if (this.isRunning()) {

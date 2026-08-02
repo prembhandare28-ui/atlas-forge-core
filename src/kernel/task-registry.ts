@@ -1,5 +1,5 @@
 import { KernelError } from "./errors";
-import type { KernelTask, KernelTaskSnapshot, TaskState } from "./types";
+import type { KernelMetrics, KernelTask, KernelTaskSnapshot, TaskState } from "./types";
 
 interface TaskRecord {
   readonly task: KernelTask;
@@ -62,5 +62,23 @@ export class KernelTaskRegistry {
         error: record.error,
       };
     });
+  }
+
+  /** Placeholder metrics derived from task state only. */
+  metrics(): KernelMetrics {
+    let running = 0;
+    let completed = 0;
+    let failed = 0;
+    for (const record of this.records.values()) {
+      if (record.state === "running") running += 1;
+      else if (record.state === "stopped") completed += 1;
+      else if (record.state === "failed") failed += 1;
+    }
+    return {
+      totalTasks: this.records.size,
+      runningTasks: running,
+      completedTasks: completed,
+      failedTasks: failed,
+    };
   }
 }

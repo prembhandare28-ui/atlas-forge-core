@@ -18,6 +18,7 @@ import { Route as AuthenticatedToolsRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedTemplatesRouteImport } from './routes/_authenticated/templates'
 import { Route as AuthenticatedSkillsRouteImport } from './routes/_authenticated/skills'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
+import { Route as AuthenticatedMissionsRouteImport } from './routes/_authenticated/missions'
 import { Route as AuthenticatedKnowledgeRouteImport } from './routes/_authenticated/knowledge'
 import { Route as AuthenticatedEmployeesRouteImport } from './routes/_authenticated/employees'
 import { Route as AuthenticatedDocumentsRouteImport } from './routes/_authenticated/documents'
@@ -71,6 +72,11 @@ const AuthenticatedSkillsRoute = AuthenticatedSkillsRouteImport.update({
 const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedMissionsRoute = AuthenticatedMissionsRouteImport.update({
+  id: '/missions',
+  path: '/missions',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedKnowledgeRoute = AuthenticatedKnowledgeRouteImport.update({
@@ -138,6 +144,7 @@ export interface FileRoutesByFullPath {
   '/documents': typeof AuthenticatedDocumentsRoute
   '/employees': typeof AuthenticatedEmployeesRouteWithChildren
   '/knowledge': typeof AuthenticatedKnowledgeRoute
+  '/missions': typeof AuthenticatedMissionsRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/skills': typeof AuthenticatedSkillsRoute
   '/templates': typeof AuthenticatedTemplatesRoute
@@ -158,6 +165,7 @@ export interface FileRoutesByTo {
   '/documents': typeof AuthenticatedDocumentsRoute
   '/employees': typeof AuthenticatedEmployeesRouteWithChildren
   '/knowledge': typeof AuthenticatedKnowledgeRoute
+  '/missions': typeof AuthenticatedMissionsRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/skills': typeof AuthenticatedSkillsRoute
   '/templates': typeof AuthenticatedTemplatesRoute
@@ -180,6 +188,7 @@ export interface FileRoutesById {
   '/_authenticated/documents': typeof AuthenticatedDocumentsRoute
   '/_authenticated/employees': typeof AuthenticatedEmployeesRouteWithChildren
   '/_authenticated/knowledge': typeof AuthenticatedKnowledgeRoute
+  '/_authenticated/missions': typeof AuthenticatedMissionsRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/skills': typeof AuthenticatedSkillsRoute
   '/_authenticated/templates': typeof AuthenticatedTemplatesRoute
@@ -202,6 +211,7 @@ export interface FileRouteTypes {
     | '/documents'
     | '/employees'
     | '/knowledge'
+    | '/missions'
     | '/settings'
     | '/skills'
     | '/templates'
@@ -222,6 +232,7 @@ export interface FileRouteTypes {
     | '/documents'
     | '/employees'
     | '/knowledge'
+    | '/missions'
     | '/settings'
     | '/skills'
     | '/templates'
@@ -243,6 +254,7 @@ export interface FileRouteTypes {
     | '/_authenticated/documents'
     | '/_authenticated/employees'
     | '/_authenticated/knowledge'
+    | '/_authenticated/missions'
     | '/_authenticated/settings'
     | '/_authenticated/skills'
     | '/_authenticated/templates'
@@ -323,6 +335,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof AuthenticatedSettingsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/missions': {
+      id: '/_authenticated/missions'
+      path: '/missions'
+      fullPath: '/missions'
+      preLoaderRoute: typeof AuthenticatedMissionsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/knowledge': {
@@ -447,6 +466,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDocumentsRoute: typeof AuthenticatedDocumentsRoute
   AuthenticatedEmployeesRoute: typeof AuthenticatedEmployeesRouteWithChildren
   AuthenticatedKnowledgeRoute: typeof AuthenticatedKnowledgeRoute
+  AuthenticatedMissionsRoute: typeof AuthenticatedMissionsRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedSkillsRoute: typeof AuthenticatedSkillsRoute
   AuthenticatedTemplatesRoute: typeof AuthenticatedTemplatesRoute
@@ -462,6 +482,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDocumentsRoute: AuthenticatedDocumentsRoute,
   AuthenticatedEmployeesRoute: AuthenticatedEmployeesRouteWithChildren,
   AuthenticatedKnowledgeRoute: AuthenticatedKnowledgeRoute,
+  AuthenticatedMissionsRoute: AuthenticatedMissionsRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedSkillsRoute: AuthenticatedSkillsRoute,
   AuthenticatedTemplatesRoute: AuthenticatedTemplatesRoute,

@@ -129,7 +129,12 @@ export type KernelEventName =
   | "kernel:shutdown:start"
   | "kernel:shutdown:complete"
   | "kernel:task:state"
-  | "kernel:health";
+  | "kernel:health"
+  /**
+   * Subsystem namespaces reuse the kernel event bus (Sprint 008+).
+   * Additive only — existing kernel event names are unchanged.
+   */
+  | `mission.${string}`;
 
 export interface KernelEvent {
   readonly name: KernelEventName;

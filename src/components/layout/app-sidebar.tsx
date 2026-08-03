@@ -12,6 +12,7 @@ import {
   BookOpen,
   Plug,
   LayoutTemplate,
+  Rocket,
 } from "lucide-react";
 
 import {
@@ -39,6 +40,7 @@ const workforce = [
 
 const intelligence = [
   { title: "Brains", url: "/brains", icon: Brain },
+  { title: "Missions", url: "/missions", icon: Rocket },
   { title: "Knowledge", url: "/knowledge", icon: BookOpen },
   { title: "Skills", url: "/skills", icon: Sparkles },
   { title: "Tools", url: "/tools", icon: Plug },

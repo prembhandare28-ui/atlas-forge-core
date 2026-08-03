@@ -27,6 +27,7 @@ import { Route as AuthenticatedBrainsRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedAttendanceRouteImport } from './routes/_authenticated/attendance'
 import { Route as AuthenticatedAnalyticsRouteImport } from './routes/_authenticated/analytics'
 import { Route as AuthenticatedWorkflowsWorkflowIdRouteImport } from './routes/_authenticated/workflows.$workflowId'
+import { Route as AuthenticatedMissionsMissionIdRouteImport } from './routes/_authenticated/missions.$missionId'
 import { Route as AuthenticatedEmployeesEmployeeIdRouteImport } from './routes/_authenticated/employees.$employeeId'
 import { Route as AuthenticatedBrainsBrainIdRouteImport } from './routes/_authenticated/brains.$brainId'
 
@@ -120,6 +121,12 @@ const AuthenticatedWorkflowsWorkflowIdRoute =
     path: '/$workflowId',
     getParentRoute: () => AuthenticatedWorkflowsRoute,
   } as any)
+const AuthenticatedMissionsMissionIdRoute =
+  AuthenticatedMissionsMissionIdRouteImport.update({
+    id: '/$missionId',
+    path: '/$missionId',
+    getParentRoute: () => AuthenticatedMissionsRoute,
+  } as any)
 const AuthenticatedEmployeesEmployeeIdRoute =
   AuthenticatedEmployeesEmployeeIdRouteImport.update({
     id: '/$employeeId',
@@ -144,7 +151,7 @@ export interface FileRoutesByFullPath {
   '/documents': typeof AuthenticatedDocumentsRoute
   '/employees': typeof AuthenticatedEmployeesRouteWithChildren
   '/knowledge': typeof AuthenticatedKnowledgeRoute
-  '/missions': typeof AuthenticatedMissionsRoute
+  '/missions': typeof AuthenticatedMissionsRouteWithChildren
   '/settings': typeof AuthenticatedSettingsRoute
   '/skills': typeof AuthenticatedSkillsRoute
   '/templates': typeof AuthenticatedTemplatesRoute
@@ -152,6 +159,7 @@ export interface FileRoutesByFullPath {
   '/workflows': typeof AuthenticatedWorkflowsRouteWithChildren
   '/brains/$brainId': typeof AuthenticatedBrainsBrainIdRoute
   '/employees/$employeeId': typeof AuthenticatedEmployeesEmployeeIdRoute
+  '/missions/$missionId': typeof AuthenticatedMissionsMissionIdRoute
   '/workflows/$workflowId': typeof AuthenticatedWorkflowsWorkflowIdRoute
 }
 export interface FileRoutesByTo {
@@ -165,7 +173,7 @@ export interface FileRoutesByTo {
   '/documents': typeof AuthenticatedDocumentsRoute
   '/employees': typeof AuthenticatedEmployeesRouteWithChildren
   '/knowledge': typeof AuthenticatedKnowledgeRoute
-  '/missions': typeof AuthenticatedMissionsRoute
+  '/missions': typeof AuthenticatedMissionsRouteWithChildren
   '/settings': typeof AuthenticatedSettingsRoute
   '/skills': typeof AuthenticatedSkillsRoute
   '/templates': typeof AuthenticatedTemplatesRoute
@@ -173,6 +181,7 @@ export interface FileRoutesByTo {
   '/workflows': typeof AuthenticatedWorkflowsRouteWithChildren
   '/brains/$brainId': typeof AuthenticatedBrainsBrainIdRoute
   '/employees/$employeeId': typeof AuthenticatedEmployeesEmployeeIdRoute
+  '/missions/$missionId': typeof AuthenticatedMissionsMissionIdRoute
   '/workflows/$workflowId': typeof AuthenticatedWorkflowsWorkflowIdRoute
 }
 export interface FileRoutesById {
@@ -188,7 +197,7 @@ export interface FileRoutesById {
   '/_authenticated/documents': typeof AuthenticatedDocumentsRoute
   '/_authenticated/employees': typeof AuthenticatedEmployeesRouteWithChildren
   '/_authenticated/knowledge': typeof AuthenticatedKnowledgeRoute
-  '/_authenticated/missions': typeof AuthenticatedMissionsRoute
+  '/_authenticated/missions': typeof AuthenticatedMissionsRouteWithChildren
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/skills': typeof AuthenticatedSkillsRoute
   '/_authenticated/templates': typeof AuthenticatedTemplatesRoute
@@ -196,6 +205,7 @@ export interface FileRoutesById {
   '/_authenticated/workflows': typeof AuthenticatedWorkflowsRouteWithChildren
   '/_authenticated/brains/$brainId': typeof AuthenticatedBrainsBrainIdRoute
   '/_authenticated/employees/$employeeId': typeof AuthenticatedEmployeesEmployeeIdRoute
+  '/_authenticated/missions/$missionId': typeof AuthenticatedMissionsMissionIdRoute
   '/_authenticated/workflows/$workflowId': typeof AuthenticatedWorkflowsWorkflowIdRoute
 }
 export interface FileRouteTypes {
@@ -219,6 +229,7 @@ export interface FileRouteTypes {
     | '/workflows'
     | '/brains/$brainId'
     | '/employees/$employeeId'
+    | '/missions/$missionId'
     | '/workflows/$workflowId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -240,6 +251,7 @@ export interface FileRouteTypes {
     | '/workflows'
     | '/brains/$brainId'
     | '/employees/$employeeId'
+    | '/missions/$missionId'
     | '/workflows/$workflowId'
   id:
     | '__root__'
@@ -262,6 +274,7 @@ export interface FileRouteTypes {
     | '/_authenticated/workflows'
     | '/_authenticated/brains/$brainId'
     | '/_authenticated/employees/$employeeId'
+    | '/_authenticated/missions/$missionId'
     | '/_authenticated/workflows/$workflowId'
   fileRoutesById: FileRoutesById
 }
@@ -400,6 +413,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedWorkflowsWorkflowIdRouteImport
       parentRoute: typeof AuthenticatedWorkflowsRoute
     }
+    '/_authenticated/missions/$missionId': {
+      id: '/_authenticated/missions/$missionId'
+      path: '/$missionId'
+      fullPath: '/missions/$missionId'
+      preLoaderRoute: typeof AuthenticatedMissionsMissionIdRouteImport
+      parentRoute: typeof AuthenticatedMissionsRoute
+    }
     '/_authenticated/employees/$employeeId': {
       id: '/_authenticated/employees/$employeeId'
       path: '/$employeeId'
@@ -443,6 +463,19 @@ const AuthenticatedEmployeesRouteWithChildren =
     AuthenticatedEmployeesRouteChildren,
   )
 
+interface AuthenticatedMissionsRouteChildren {
+  AuthenticatedMissionsMissionIdRoute: typeof AuthenticatedMissionsMissionIdRoute
+}
+
+const AuthenticatedMissionsRouteChildren: AuthenticatedMissionsRouteChildren = {
+  AuthenticatedMissionsMissionIdRoute: AuthenticatedMissionsMissionIdRoute,
+}
+
+const AuthenticatedMissionsRouteWithChildren =
+  AuthenticatedMissionsRoute._addFileChildren(
+    AuthenticatedMissionsRouteChildren,
+  )
+
 interface AuthenticatedWorkflowsRouteChildren {
   AuthenticatedWorkflowsWorkflowIdRoute: typeof AuthenticatedWorkflowsWorkflowIdRoute
 }
@@ -466,7 +499,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDocumentsRoute: typeof AuthenticatedDocumentsRoute
   AuthenticatedEmployeesRoute: typeof AuthenticatedEmployeesRouteWithChildren
   AuthenticatedKnowledgeRoute: typeof AuthenticatedKnowledgeRoute
-  AuthenticatedMissionsRoute: typeof AuthenticatedMissionsRoute
+  AuthenticatedMissionsRoute: typeof AuthenticatedMissionsRouteWithChildren
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedSkillsRoute: typeof AuthenticatedSkillsRoute
   AuthenticatedTemplatesRoute: typeof AuthenticatedTemplatesRoute
@@ -482,7 +515,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDocumentsRoute: AuthenticatedDocumentsRoute,
   AuthenticatedEmployeesRoute: AuthenticatedEmployeesRouteWithChildren,
   AuthenticatedKnowledgeRoute: AuthenticatedKnowledgeRoute,
-  AuthenticatedMissionsRoute: AuthenticatedMissionsRoute,
+  AuthenticatedMissionsRoute: AuthenticatedMissionsRouteWithChildren,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedSkillsRoute: AuthenticatedSkillsRoute,
   AuthenticatedTemplatesRoute: AuthenticatedTemplatesRoute,

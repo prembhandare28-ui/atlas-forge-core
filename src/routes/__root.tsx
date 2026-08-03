@@ -84,9 +84,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "description", content: "The workforce operating system for modern organizations. Employee Factory is the foundation of ATLAS OS." },
       { name: "author", content: "ATLAS OS" },
       { property: "og:title", content: "ATLAS OS — Employee Factory" },
-      { property: "og:description", content: "The workforce operating system for modern organizations." },
+      { property: "og:description", content: "The workforce operating system for modern organizations. Employee Factory is the foundation of ATLAS OS." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "ATLAS OS — Employee Factory" },
+      { name: "twitter:description", content: "The workforce operating system for modern organizations. Employee Factory is the foundation of ATLAS OS." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/b639bf44-7134-4904-980e-c8eeb798246d/id-preview-47fd42e9--b14f48df-e515-4f9f-ae95-6cd53bc1f863.lovable.app-1785735301121.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/b639bf44-7134-4904-980e-c8eeb798246d/id-preview-47fd42e9--b14f48df-e515-4f9f-ae95-6cd53bc1f863.lovable.app-1785735301121.png" },
     ],
     links: [
       {

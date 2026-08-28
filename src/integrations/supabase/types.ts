@@ -813,6 +813,250 @@ export type Database = {
           },
         ]
       }
+      mission_run_events: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          kind: string
+          message: string
+          metadata: Json
+          mission_id: string
+          step_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          kind: string
+          message: string
+          metadata?: Json
+          mission_id: string
+          step_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          kind?: string
+          message?: string
+          metadata?: Json
+          mission_id?: string
+          step_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mission_run_events_mission_id_fkey"
+            columns: ["mission_id"]
+            isOneToOne: false
+            referencedRelation: "mission_runs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mission_run_events_step_id_fkey"
+            columns: ["step_id"]
+            isOneToOne: false
+            referencedRelation: "mission_run_steps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mission_run_messages: {
+        Row: {
+          content: string
+          created_at: string
+          created_by: string | null
+          id: string
+          metadata: Json
+          mission_id: string
+          role: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          metadata?: Json
+          mission_id: string
+          role: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          metadata?: Json
+          mission_id?: string
+          role?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mission_run_messages_mission_id_fkey"
+            columns: ["mission_id"]
+            isOneToOne: false
+            referencedRelation: "mission_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mission_run_steps: {
+        Row: {
+          capability_available: boolean
+          completed_at: string | null
+          created_at: string
+          description: string | null
+          error: string | null
+          executor_id: string | null
+          executor_kind: Database["public"]["Enums"]["mission_executor_kind"]
+          executor_label: string | null
+          id: string
+          input: Json
+          instruction: string | null
+          mission_id: string
+          order_index: number
+          output: Json | null
+          requires_approval: boolean
+          retry_count: number
+          started_at: string | null
+          status: Database["public"]["Enums"]["mission_step_status"]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          capability_available?: boolean
+          completed_at?: string | null
+          created_at?: string
+          description?: string | null
+          error?: string | null
+          executor_id?: string | null
+          executor_kind?: Database["public"]["Enums"]["mission_executor_kind"]
+          executor_label?: string | null
+          id?: string
+          input?: Json
+          instruction?: string | null
+          mission_id: string
+          order_index: number
+          output?: Json | null
+          requires_approval?: boolean
+          retry_count?: number
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["mission_step_status"]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          capability_available?: boolean
+          completed_at?: string | null
+          created_at?: string
+          description?: string | null
+          error?: string | null
+          executor_id?: string | null
+          executor_kind?: Database["public"]["Enums"]["mission_executor_kind"]
+          executor_label?: string | null
+          id?: string
+          input?: Json
+          instruction?: string | null
+          mission_id?: string
+          order_index?: number
+          output?: Json | null
+          requires_approval?: boolean
+          retry_count?: number
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["mission_step_status"]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mission_run_steps_mission_id_fkey"
+            columns: ["mission_id"]
+            isOneToOne: false
+            referencedRelation: "mission_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mission_runs: {
+        Row: {
+          clarification_question: string | null
+          completed_at: string | null
+          constraints: Json
+          created_at: string
+          created_by: string | null
+          current_action: string | null
+          deadline: string | null
+          desired_outcome: string | null
+          error: string | null
+          id: string
+          intent_text: string
+          metadata: Json
+          objective: string | null
+          plan_rationale: string | null
+          priority: Database["public"]["Enums"]["employee_priority"]
+          progress_percent: number
+          result: Json | null
+          started_at: string | null
+          status: Database["public"]["Enums"]["mission_run_status"]
+          success_criteria: Json
+          summary: string | null
+          title: string
+          updated_at: string
+          verification: Json | null
+        }
+        Insert: {
+          clarification_question?: string | null
+          completed_at?: string | null
+          constraints?: Json
+          created_at?: string
+          created_by?: string | null
+          current_action?: string | null
+          deadline?: string | null
+          desired_outcome?: string | null
+          error?: string | null
+          id?: string
+          intent_text: string
+          metadata?: Json
+          objective?: string | null
+          plan_rationale?: string | null
+          priority?: Database["public"]["Enums"]["employee_priority"]
+          progress_percent?: number
+          result?: Json | null
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["mission_run_status"]
+          success_criteria?: Json
+          summary?: string | null
+          title: string
+          updated_at?: string
+          verification?: Json | null
+        }
+        Update: {
+          clarification_question?: string | null
+          completed_at?: string | null
+          constraints?: Json
+          created_at?: string
+          created_by?: string | null
+          current_action?: string | null
+          deadline?: string | null
+          desired_outcome?: string | null
+          error?: string | null
+          id?: string
+          intent_text?: string
+          metadata?: Json
+          objective?: string | null
+          plan_rationale?: string | null
+          priority?: Database["public"]["Enums"]["employee_priority"]
+          progress_percent?: number
+          result?: Json | null
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["mission_run_status"]
+          success_criteria?: Json
+          summary?: string | null
+          title?: string
+          updated_at?: string
+          verification?: Json | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -1223,6 +1467,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      can_access_mission_run: {
+        Args: { _mission_id: string }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -1314,6 +1562,33 @@ export type Database = {
         | "subscription"
         | "usage_based"
         | "enterprise"
+      mission_executor_kind:
+        | "ai_brain"
+        | "skill"
+        | "tool"
+        | "workflow"
+        | "employee"
+        | "human"
+        | "system"
+      mission_run_status:
+        | "planning"
+        | "ready"
+        | "running"
+        | "waiting_for_human"
+        | "waiting_for_approval"
+        | "blocked"
+        | "failed"
+        | "completed"
+        | "cancelled"
+      mission_step_status:
+        | "pending"
+        | "running"
+        | "waiting_for_human"
+        | "waiting_for_approval"
+        | "blocked"
+        | "failed"
+        | "skipped"
+        | "completed"
       revenue_category:
         | "sales"
         | "marketing"
@@ -1584,6 +1859,36 @@ export const Constants = {
         "subscription",
         "usage_based",
         "enterprise",
+      ],
+      mission_executor_kind: [
+        "ai_brain",
+        "skill",
+        "tool",
+        "workflow",
+        "employee",
+        "human",
+        "system",
+      ],
+      mission_run_status: [
+        "planning",
+        "ready",
+        "running",
+        "waiting_for_human",
+        "waiting_for_approval",
+        "blocked",
+        "failed",
+        "completed",
+        "cancelled",
+      ],
+      mission_step_status: [
+        "pending",
+        "running",
+        "waiting_for_human",
+        "waiting_for_approval",
+        "blocked",
+        "failed",
+        "skipped",
+        "completed",
       ],
       revenue_category: [
         "sales",

@@ -48,12 +48,18 @@ import {
 } from "@/lib/employees/hooks";
 import { useCan } from "@/lib/rbac";
 
+export interface EmployeesSearch {
+  readonly status?: string[];
+  readonly kind?: string[];
+  readonly department?: string[];
+}
+
 export const Route = createFileRoute("/_authenticated/employees")({
-  validateSearch: (search: Record<string, unknown>) => {
-    const asArray = (v: unknown): string[] => {
+  validateSearch: (search: Record<string, unknown>): EmployeesSearch => {
+    const asArray = (v: unknown): string[] | undefined => {
       if (Array.isArray(v)) return v.map(String);
       if (typeof v === "string" && v.length) return v.split(",");
-      return [];
+      return undefined;
     };
     return {
       status: asArray(search.status),
@@ -63,6 +69,7 @@ export const Route = createFileRoute("/_authenticated/employees")({
   },
   component: EmployeesPage,
 });
+
 
 type ColumnKey =
   | "employee_code"

@@ -530,6 +530,106 @@ export type Database = {
           },
         ]
       }
+      customers: {
+        Row: {
+          contact_email: string | null
+          contact_name: string | null
+          created_at: string
+          created_by: string | null
+          currency: string
+          delivery_status: string | null
+          health: string | null
+          id: string
+          industry: string | null
+          lead_id: string | null
+          lifecycle: Database["public"]["Enums"]["customer_lifecycle"]
+          metadata: Json
+          mrr: number
+          name: string
+          notes: string | null
+          offer_id: string | null
+          onboarding_mission_id: string | null
+          owner_id: string | null
+          renewal_at: string | null
+          started_at: string | null
+          total_revenue: number
+          updated_at: string
+          website: string | null
+        }
+        Insert: {
+          contact_email?: string | null
+          contact_name?: string | null
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          delivery_status?: string | null
+          health?: string | null
+          id?: string
+          industry?: string | null
+          lead_id?: string | null
+          lifecycle?: Database["public"]["Enums"]["customer_lifecycle"]
+          metadata?: Json
+          mrr?: number
+          name: string
+          notes?: string | null
+          offer_id?: string | null
+          onboarding_mission_id?: string | null
+          owner_id?: string | null
+          renewal_at?: string | null
+          started_at?: string | null
+          total_revenue?: number
+          updated_at?: string
+          website?: string | null
+        }
+        Update: {
+          contact_email?: string | null
+          contact_name?: string | null
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          delivery_status?: string | null
+          health?: string | null
+          id?: string
+          industry?: string | null
+          lead_id?: string | null
+          lifecycle?: Database["public"]["Enums"]["customer_lifecycle"]
+          metadata?: Json
+          mrr?: number
+          name?: string
+          notes?: string | null
+          offer_id?: string | null
+          onboarding_mission_id?: string | null
+          owner_id?: string | null
+          renewal_at?: string | null
+          started_at?: string | null
+          total_revenue?: number
+          updated_at?: string
+          website?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customers_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customers_offer_id_fkey"
+            columns: ["offer_id"]
+            isOneToOne: false
+            referencedRelation: "offers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customers_onboarding_mission_id_fkey"
+            columns: ["onboarding_mission_id"]
+            isOneToOne: false
+            referencedRelation: "mission_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       departments: {
         Row: {
           created_at: string
@@ -813,6 +913,111 @@ export type Database = {
           },
         ]
       }
+      leads: {
+        Row: {
+          company: string | null
+          company_size: string | null
+          consent: boolean
+          created_at: string
+          created_by: string | null
+          email: string
+          full_name: string
+          id: string
+          interested_offer_id: string | null
+          last_contacted_at: string | null
+          message: string | null
+          mission_id: string | null
+          next_action: string | null
+          next_action_at: string | null
+          notes: string | null
+          owner_id: string | null
+          phone: string | null
+          problem: string | null
+          qualification: Json
+          role_title: string | null
+          score: number
+          source: Database["public"]["Enums"]["lead_source"]
+          source_detail: string | null
+          status: Database["public"]["Enums"]["lead_status"]
+          tags: string[]
+          updated_at: string
+          website: string | null
+        }
+        Insert: {
+          company?: string | null
+          company_size?: string | null
+          consent?: boolean
+          created_at?: string
+          created_by?: string | null
+          email: string
+          full_name: string
+          id?: string
+          interested_offer_id?: string | null
+          last_contacted_at?: string | null
+          message?: string | null
+          mission_id?: string | null
+          next_action?: string | null
+          next_action_at?: string | null
+          notes?: string | null
+          owner_id?: string | null
+          phone?: string | null
+          problem?: string | null
+          qualification?: Json
+          role_title?: string | null
+          score?: number
+          source?: Database["public"]["Enums"]["lead_source"]
+          source_detail?: string | null
+          status?: Database["public"]["Enums"]["lead_status"]
+          tags?: string[]
+          updated_at?: string
+          website?: string | null
+        }
+        Update: {
+          company?: string | null
+          company_size?: string | null
+          consent?: boolean
+          created_at?: string
+          created_by?: string | null
+          email?: string
+          full_name?: string
+          id?: string
+          interested_offer_id?: string | null
+          last_contacted_at?: string | null
+          message?: string | null
+          mission_id?: string | null
+          next_action?: string | null
+          next_action_at?: string | null
+          notes?: string | null
+          owner_id?: string | null
+          phone?: string | null
+          problem?: string | null
+          qualification?: Json
+          role_title?: string | null
+          score?: number
+          source?: Database["public"]["Enums"]["lead_source"]
+          source_detail?: string | null
+          status?: Database["public"]["Enums"]["lead_status"]
+          tags?: string[]
+          updated_at?: string
+          website?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "leads_interested_offer_id_fkey"
+            columns: ["interested_offer_id"]
+            isOneToOne: false
+            referencedRelation: "offers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "leads_mission_id_fkey"
+            columns: ["mission_id"]
+            isOneToOne: false
+            referencedRelation: "mission_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       mission_run_events: {
         Row: {
           created_at: string
@@ -1057,6 +1262,288 @@ export type Database = {
         }
         Relationships: []
       }
+      offers: {
+        Row: {
+          billing_interval: Database["public"]["Enums"]["offer_billing_interval"]
+          case_studies: string[]
+          created_at: string
+          created_by: string | null
+          cta_label: string | null
+          currency: string
+          delivery_duration_days: number | null
+          delivery_model: string | null
+          description: string | null
+          features: string[]
+          id: string
+          is_public: boolean
+          limits: Json
+          metadata: Json
+          name: string
+          onboarding_requirements: string[]
+          price: number
+          pricing_model: Database["public"]["Enums"]["offer_pricing_model"]
+          slug: string | null
+          sort_order: number
+          status: Database["public"]["Enums"]["offer_status"]
+          target_customer: string | null
+          updated_at: string
+        }
+        Insert: {
+          billing_interval?: Database["public"]["Enums"]["offer_billing_interval"]
+          case_studies?: string[]
+          created_at?: string
+          created_by?: string | null
+          cta_label?: string | null
+          currency?: string
+          delivery_duration_days?: number | null
+          delivery_model?: string | null
+          description?: string | null
+          features?: string[]
+          id?: string
+          is_public?: boolean
+          limits?: Json
+          metadata?: Json
+          name: string
+          onboarding_requirements?: string[]
+          price?: number
+          pricing_model?: Database["public"]["Enums"]["offer_pricing_model"]
+          slug?: string | null
+          sort_order?: number
+          status?: Database["public"]["Enums"]["offer_status"]
+          target_customer?: string | null
+          updated_at?: string
+        }
+        Update: {
+          billing_interval?: Database["public"]["Enums"]["offer_billing_interval"]
+          case_studies?: string[]
+          created_at?: string
+          created_by?: string | null
+          cta_label?: string | null
+          currency?: string
+          delivery_duration_days?: number | null
+          delivery_model?: string | null
+          description?: string | null
+          features?: string[]
+          id?: string
+          is_public?: boolean
+          limits?: Json
+          metadata?: Json
+          name?: string
+          onboarding_requirements?: string[]
+          price?: number
+          pricing_model?: Database["public"]["Enums"]["offer_pricing_model"]
+          slug?: string | null
+          sort_order?: number
+          status?: Database["public"]["Enums"]["offer_status"]
+          target_customer?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      opportunities: {
+        Row: {
+          closed_at: string | null
+          company: string | null
+          contact_email: string | null
+          contact_name: string | null
+          created_at: string
+          created_by: string | null
+          currency: string
+          customer_id: string | null
+          expected_close_at: string | null
+          id: string
+          last_contacted_at: string | null
+          lead_id: string | null
+          lost_reason: string | null
+          metadata: Json
+          mission_id: string | null
+          next_action: string | null
+          next_action_at: string | null
+          notes: string | null
+          offer_id: string | null
+          owner_id: string | null
+          probability: number
+          problem: string | null
+          source: Database["public"]["Enums"]["lead_source"]
+          stage: Database["public"]["Enums"]["opportunity_stage"]
+          title: string
+          updated_at: string
+          value: number
+        }
+        Insert: {
+          closed_at?: string | null
+          company?: string | null
+          contact_email?: string | null
+          contact_name?: string | null
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          customer_id?: string | null
+          expected_close_at?: string | null
+          id?: string
+          last_contacted_at?: string | null
+          lead_id?: string | null
+          lost_reason?: string | null
+          metadata?: Json
+          mission_id?: string | null
+          next_action?: string | null
+          next_action_at?: string | null
+          notes?: string | null
+          offer_id?: string | null
+          owner_id?: string | null
+          probability?: number
+          problem?: string | null
+          source?: Database["public"]["Enums"]["lead_source"]
+          stage?: Database["public"]["Enums"]["opportunity_stage"]
+          title: string
+          updated_at?: string
+          value?: number
+        }
+        Update: {
+          closed_at?: string | null
+          company?: string | null
+          contact_email?: string | null
+          contact_name?: string | null
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          customer_id?: string | null
+          expected_close_at?: string | null
+          id?: string
+          last_contacted_at?: string | null
+          lead_id?: string | null
+          lost_reason?: string | null
+          metadata?: Json
+          mission_id?: string | null
+          next_action?: string | null
+          next_action_at?: string | null
+          notes?: string | null
+          offer_id?: string | null
+          owner_id?: string | null
+          probability?: number
+          problem?: string | null
+          source?: Database["public"]["Enums"]["lead_source"]
+          stage?: Database["public"]["Enums"]["opportunity_stage"]
+          title?: string
+          updated_at?: string
+          value?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "opportunities_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "opportunities_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "opportunities_mission_id_fkey"
+            columns: ["mission_id"]
+            isOneToOne: false
+            referencedRelation: "mission_runs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "opportunities_offer_id_fkey"
+            columns: ["offer_id"]
+            isOneToOne: false
+            referencedRelation: "offers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payments: {
+        Row: {
+          amount: number
+          confirmed_at: string | null
+          created_at: string
+          created_by: string | null
+          currency: string
+          customer_id: string | null
+          id: string
+          invoice_ref: string | null
+          invoice_url: string | null
+          metadata: Json
+          offer_id: string | null
+          opportunity_id: string | null
+          provider: string
+          provider_customer_ref: string | null
+          provider_payment_ref: string | null
+          provider_subscription_ref: string | null
+          status: Database["public"]["Enums"]["payment_status"]
+          updated_at: string
+        }
+        Insert: {
+          amount?: number
+          confirmed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          customer_id?: string | null
+          id?: string
+          invoice_ref?: string | null
+          invoice_url?: string | null
+          metadata?: Json
+          offer_id?: string | null
+          opportunity_id?: string | null
+          provider?: string
+          provider_customer_ref?: string | null
+          provider_payment_ref?: string | null
+          provider_subscription_ref?: string | null
+          status?: Database["public"]["Enums"]["payment_status"]
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          confirmed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          customer_id?: string | null
+          id?: string
+          invoice_ref?: string | null
+          invoice_url?: string | null
+          metadata?: Json
+          offer_id?: string | null
+          opportunity_id?: string | null
+          provider?: string
+          provider_customer_ref?: string | null
+          provider_payment_ref?: string | null
+          provider_subscription_ref?: string | null
+          status?: Database["public"]["Enums"]["payment_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_offer_id_fkey"
+            columns: ["offer_id"]
+            isOneToOne: false
+            referencedRelation: "offers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_opportunity_id_fkey"
+            columns: ["opportunity_id"]
+            isOneToOne: false
+            referencedRelation: "opportunities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -1089,6 +1576,173 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      proposals: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          assumptions: string[]
+          created_at: string
+          created_by: string | null
+          customer_summary: string | null
+          detected_problem: string | null
+          expected_workflow: string | null
+          generated_by: string | null
+          id: string
+          implementation_plan: Json
+          mission_id: string | null
+          next_steps: string[]
+          offer_id: string | null
+          opportunity_id: string
+          pricing_draft: Json
+          recommended_solution: string | null
+          sent_at: string | null
+          status: Database["public"]["Enums"]["proposal_status"]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          assumptions?: string[]
+          created_at?: string
+          created_by?: string | null
+          customer_summary?: string | null
+          detected_problem?: string | null
+          expected_workflow?: string | null
+          generated_by?: string | null
+          id?: string
+          implementation_plan?: Json
+          mission_id?: string | null
+          next_steps?: string[]
+          offer_id?: string | null
+          opportunity_id: string
+          pricing_draft?: Json
+          recommended_solution?: string | null
+          sent_at?: string | null
+          status?: Database["public"]["Enums"]["proposal_status"]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          assumptions?: string[]
+          created_at?: string
+          created_by?: string | null
+          customer_summary?: string | null
+          detected_problem?: string | null
+          expected_workflow?: string | null
+          generated_by?: string | null
+          id?: string
+          implementation_plan?: Json
+          mission_id?: string | null
+          next_steps?: string[]
+          offer_id?: string | null
+          opportunity_id?: string
+          pricing_draft?: Json
+          recommended_solution?: string | null
+          sent_at?: string | null
+          status?: Database["public"]["Enums"]["proposal_status"]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "proposals_mission_id_fkey"
+            columns: ["mission_id"]
+            isOneToOne: false
+            referencedRelation: "mission_runs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "proposals_offer_id_fkey"
+            columns: ["offer_id"]
+            isOneToOne: false
+            referencedRelation: "offers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "proposals_opportunity_id_fkey"
+            columns: ["opportunity_id"]
+            isOneToOne: false
+            referencedRelation: "opportunities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      revenue_events: {
+        Row: {
+          amount: number
+          created_at: string
+          created_by: string | null
+          currency: string
+          customer_id: string | null
+          description: string | null
+          id: string
+          is_recurring: boolean
+          kind: Database["public"]["Enums"]["revenue_event_kind"]
+          metadata: Json
+          occurred_at: string
+          offer_id: string | null
+          opportunity_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          amount?: number
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          customer_id?: string | null
+          description?: string | null
+          id?: string
+          is_recurring?: boolean
+          kind: Database["public"]["Enums"]["revenue_event_kind"]
+          metadata?: Json
+          occurred_at?: string
+          offer_id?: string | null
+          opportunity_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          customer_id?: string | null
+          description?: string | null
+          id?: string
+          is_recurring?: boolean
+          kind?: Database["public"]["Enums"]["revenue_event_kind"]
+          metadata?: Json
+          occurred_at?: string
+          offer_id?: string | null
+          opportunity_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "revenue_events_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "revenue_events_offer_id_fkey"
+            columns: ["offer_id"]
+            isOneToOne: false
+            referencedRelation: "offers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "revenue_events_opportunity_id_fkey"
+            columns: ["opportunity_id"]
+            isOneToOne: false
+            referencedRelation: "opportunities"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       skills: {
         Row: {
@@ -1515,6 +2169,15 @@ export type Database = {
         | "analytical"
         | "playful"
       brain_visibility: "private" | "organization" | "public"
+      customer_lifecycle:
+        | "prospect"
+        | "customer"
+        | "onboarding"
+        | "active_delivery"
+        | "completed"
+        | "retention"
+        | "expansion"
+        | "churned"
       deployment_status: "draft" | "ready" | "deployed" | "paused" | "error"
       employee_kind: "human" | "ai" | "hybrid"
       employee_priority: "low" | "medium" | "high" | "critical"
@@ -1550,6 +2213,22 @@ export type Database = {
         | "notes"
         | "url"
       knowledge_status: "draft" | "active" | "archived"
+      lead_source:
+        | "website"
+        | "referral"
+        | "outbound"
+        | "inbound"
+        | "partner"
+        | "event"
+        | "atlas_research"
+        | "other"
+      lead_status:
+        | "new"
+        | "contacted"
+        | "qualified"
+        | "unqualified"
+        | "converted"
+        | "archived"
       marketplace_license:
         | "proprietary"
         | "mit"
@@ -1589,6 +2268,41 @@ export type Database = {
         | "failed"
         | "skipped"
         | "completed"
+      offer_billing_interval: "none" | "monthly" | "quarterly" | "annual"
+      offer_pricing_model:
+        | "one_time"
+        | "subscription"
+        | "retainer"
+        | "usage_based"
+        | "custom"
+      offer_status: "draft" | "active" | "paused" | "retired"
+      opportunity_stage:
+        | "lead"
+        | "qualified"
+        | "discovery"
+        | "proposal"
+        | "negotiation"
+        | "won"
+        | "onboarding"
+        | "delivery"
+        | "retention"
+        | "expansion"
+        | "lost"
+      payment_status:
+        | "pending"
+        | "requires_action"
+        | "processing"
+        | "succeeded"
+        | "failed"
+        | "refunded"
+        | "cancelled"
+      proposal_status:
+        | "draft"
+        | "in_review"
+        | "approved"
+        | "sent"
+        | "accepted"
+        | "rejected"
       revenue_category:
         | "sales"
         | "marketing"
@@ -1596,6 +2310,14 @@ export type Database = {
         | "operations"
         | "research"
         | "custom"
+      revenue_event_kind:
+        | "booking"
+        | "invoice"
+        | "payment"
+        | "recurring"
+        | "expansion"
+        | "refund"
+        | "churn"
       skill_category:
         | "sales"
         | "support"
@@ -1808,6 +2530,16 @@ export const Constants = {
         "playful",
       ],
       brain_visibility: ["private", "organization", "public"],
+      customer_lifecycle: [
+        "prospect",
+        "customer",
+        "onboarding",
+        "active_delivery",
+        "completed",
+        "retention",
+        "expansion",
+        "churned",
+      ],
       deployment_status: ["draft", "ready", "deployed", "paused", "error"],
       employee_kind: ["human", "ai", "hybrid"],
       employee_priority: ["low", "medium", "high", "critical"],
@@ -1846,6 +2578,24 @@ export const Constants = {
         "url",
       ],
       knowledge_status: ["draft", "active", "archived"],
+      lead_source: [
+        "website",
+        "referral",
+        "outbound",
+        "inbound",
+        "partner",
+        "event",
+        "atlas_research",
+        "other",
+      ],
+      lead_status: [
+        "new",
+        "contacted",
+        "qualified",
+        "unqualified",
+        "converted",
+        "archived",
+      ],
       marketplace_license: [
         "proprietary",
         "mit",
@@ -1890,6 +2640,45 @@ export const Constants = {
         "skipped",
         "completed",
       ],
+      offer_billing_interval: ["none", "monthly", "quarterly", "annual"],
+      offer_pricing_model: [
+        "one_time",
+        "subscription",
+        "retainer",
+        "usage_based",
+        "custom",
+      ],
+      offer_status: ["draft", "active", "paused", "retired"],
+      opportunity_stage: [
+        "lead",
+        "qualified",
+        "discovery",
+        "proposal",
+        "negotiation",
+        "won",
+        "onboarding",
+        "delivery",
+        "retention",
+        "expansion",
+        "lost",
+      ],
+      payment_status: [
+        "pending",
+        "requires_action",
+        "processing",
+        "succeeded",
+        "failed",
+        "refunded",
+        "cancelled",
+      ],
+      proposal_status: [
+        "draft",
+        "in_review",
+        "approved",
+        "sent",
+        "accepted",
+        "rejected",
+      ],
       revenue_category: [
         "sales",
         "marketing",
@@ -1897,6 +2686,15 @@ export const Constants = {
         "operations",
         "research",
         "custom",
+      ],
+      revenue_event_kind: [
+        "booking",
+        "invoice",
+        "payment",
+        "recurring",
+        "expansion",
+        "refund",
+        "churn",
       ],
       skill_category: [
         "sales",
